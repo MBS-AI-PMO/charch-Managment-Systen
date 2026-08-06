@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Choose a new password | Church CMS Admin</title>
+    <style>
+        :root {
+            --brand-primary: {{ $brandPrimaryRgb ?? '122 31 43' }};
+            --brand-secondary: {{ $brandSecondaryRgb ?? '201 169 97' }};
+        }
+        [x-cloak]{display:none!important}
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>[x-cloak]{display:none!important}</style>
 </head>
 @php
   $brand = $brandName ?? 'Assemblies of God';

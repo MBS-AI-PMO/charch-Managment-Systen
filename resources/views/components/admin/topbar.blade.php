@@ -3,6 +3,7 @@ $routeName = Route::currentRouteName() ?? '';
 $parts = explode('.', $routeName);
 $section = $parts[1] ?? 'dashboard';
 $sub = $parts[2] ?? null;
+$action = $parts[3] ?? null;
 $labels = [
     'dashboard'  => 'Dashboard',
     'pages'      => 'Pages',
@@ -16,8 +17,18 @@ $labels = [
     'users'      => 'Users',
     'roles'      => 'Roles & permissions',
     'settings'   => 'Site settings',
+    'tithes'     => 'Tithes',
+    'reports'    => 'Reports',
+    'attendance' => 'Attendance',
+];
+$subLabels = [
+    'funds'    => 'Funds',
+    'series'   => 'Series',
+    'speakers' => 'Speakers',
 ];
 $primary = $labels[$section] ?? ucfirst($section);
+$secondary = $subLabels[$sub] ?? (in_array($sub, ['edit', 'create', 'show'], true) ? ucfirst($sub) : null);
+$tertiary = in_array($action, ['edit', 'create', 'show'], true) ? ucfirst($action) : null;
 $user = auth('admin')->user();
 $initials = $user
     ? collect(explode(' ', $user->name))->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->join('')
@@ -33,9 +44,13 @@ $initials = $user
             <a href="{{ route('admin.dashboard') }}" class="hover:underline shrink-0">Admin</a>
             <span class="text-ink-muted/50 shrink-0">/</span>
             <span class="text-ink font-medium truncate">{{ $primary }}</span>
-            @if(in_array($sub, ['edit','create','show']))
+            @if($secondary)
                 <span class="text-ink-muted/50 shrink-0 hidden sm:inline">/</span>
-                <span class="text-ink font-medium truncate hidden sm:inline">{{ ucfirst($sub) }}</span>
+                <span class="text-ink font-medium truncate hidden sm:inline">{{ $secondary }}</span>
+            @endif
+            @if($tertiary)
+                <span class="text-ink-muted/50 shrink-0 hidden sm:inline">/</span>
+                <span class="text-ink font-medium truncate hidden sm:inline">{{ $tertiary }}</span>
             @endif
         </nav>
     </div>

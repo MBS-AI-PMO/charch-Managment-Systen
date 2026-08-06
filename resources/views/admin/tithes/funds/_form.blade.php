@@ -6,12 +6,12 @@
 
     <label class="flex flex-col gap-1">
         <span class="text-sm font-medium">Name</span>
-        <input type="text" name="name" value="{{ $fund->name ?? old('name') }}" class="border rounded p-2" required>
+        <input type="text" name="name" value="{{ $fund->name ?? old('name') }}" class="input" required>
     </label>
 
     <label class="flex flex-col gap-1">
         <span class="text-sm font-medium">Description</span>
-        <textarea name="description" rows="3" class="border rounded p-2">{{ $fund->description ?? '' }}</textarea>
+        <textarea name="description" rows="3" class="input">{{ $fund->description ?? '' }}</textarea>
     </label>
 
     <div class="grid sm:grid-cols-2 gap-4">
@@ -21,12 +21,12 @@
         </label>
         <label class="flex flex-col gap-1">
             <span class="text-sm font-medium">Sort order</span>
-            <input type="number" name="sort_order" value="{{ $fund->sort_order ?? 0 }}" class="border rounded p-2">
+            <input type="number" name="sort_order" value="{{ $fund->sort_order ?? 0 }}" class="input">
         </label>
     </div>
 
     <div class="flex gap-2 justify-end">
-        <a href="{{ route('admin.tithes.funds.index') }}" class="text-sm">Cancel</a>
+        <a href="{{ route('admin.tithes.funds.index') }}" class="btn-ghost text-sm">Cancel</a>
         <button class="btn-primary text-sm">{{ $editing ? 'Save' : 'Create' }}</button>
     </div>
 </form>

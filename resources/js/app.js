@@ -32,7 +32,15 @@ const startReveal = () => {
         { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
     );
 
-    els.forEach((el) => observer.observe(el));
+    // Show already-visible sections immediately so reload doesn't flash blank → styled.
+    els.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+            el.classList.add('is-in');
+        } else {
+            observer.observe(el);
+        }
+    });
 };
 
 if (document.readyState === 'loading') {

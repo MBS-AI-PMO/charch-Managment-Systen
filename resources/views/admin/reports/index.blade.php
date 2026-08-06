@@ -1,22 +1,36 @@
 <x-admin.layout title="Reports">
-    <h1 class="font-serif text-2xl mb-6">Reports</h1>
+    <div class="mb-6">
+        <h1 class="text-2xl font-serif">Reports</h1>
+        <p class="text-sm text-ink-muted mt-1">Attendance and giving overview for the selected period.</p>
+    </div>
 
-    <form method="GET" class="card p-4 mb-6 flex flex-wrap items-end gap-3">
-        <label class="flex flex-col text-sm">
-            Range
-            <select name="preset" class="border rounded p-2">
-                @foreach(['7' => 'Last 7 days', '30' => 'Last 30 days', '90' => 'Last 90 days', 'ytd' => 'This year'] as $k => $v)
-                    <option value="{{ $k }}" @selected($preset === $k)>{{ $v }}</option>
-                @endforeach
-            </select>
-        </label>
-        <label class="flex flex-col text-sm">From <input type="date" name="from" value="{{ request('from') }}" class="border rounded p-2"></label>
-        <label class="flex flex-col text-sm">To   <input type="date" name="to"   value="{{ request('to') }}"   class="border rounded p-2"></label>
-        <button class="btn-secondary text-sm">Update</button>
+    <form method="GET" class="card mb-6 overflow-hidden">
+        <div class="px-5 py-4 flex flex-wrap items-end gap-3">
+            <label class="flex flex-col gap-1.5 text-xs font-medium text-ink-muted">
+                Range
+                <select name="preset" class="input w-44 text-sm text-ink">
+                    @foreach(['7' => 'Last 7 days', '30' => 'Last 30 days', '90' => 'Last 90 days', 'ytd' => 'This year'] as $k => $v)
+                        <option value="{{ $k }}" @selected($preset === $k)>{{ $v }}</option>
+                    @endforeach
+                </select>
+            </label>
 
-        <div class="ml-auto flex gap-2">
-            <a href="{{ route('admin.reports.attendance.csv', request()->only(['preset', 'from', 'to'])) }}" class="btn-secondary text-sm">Attendance CSV</a>
-            <a href="{{ route('admin.reports.giving.csv',     request()->only(['preset', 'from', 'to'])) }}" class="btn-secondary text-sm">Giving CSV</a>
+            <label class="flex flex-col gap-1.5 text-xs font-medium text-ink-muted">
+                From
+                <input type="date" name="from" value="{{ request('from') }}" class="input w-40 text-sm text-ink">
+            </label>
+
+            <label class="flex flex-col gap-1.5 text-xs font-medium text-ink-muted">
+                To
+                <input type="date" name="to" value="{{ request('to') }}" class="input w-40 text-sm text-ink">
+            </label>
+
+            <button type="submit" class="btn-primary text-sm">Update</button>
+
+            <div class="ml-auto flex flex-wrap gap-2">
+                <a href="{{ route('admin.reports.attendance.csv', request()->only(['preset', 'from', 'to'])) }}" class="btn-ghost text-sm">Attendance CSV</a>
+                <a href="{{ route('admin.reports.giving.csv', request()->only(['preset', 'from', 'to'])) }}" class="btn-ghost text-sm">Giving CSV</a>
+            </div>
         </div>
     </form>
 
