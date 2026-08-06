@@ -47,9 +47,38 @@ $icons = [
 
 $current = request()->route()?->getName() ?? '';
 
-$isActive = function (string $route) use ($current) {
+$isActive = function (string $route) use ($current, $links) {
     $stem = preg_replace('/\.index$/', '', $route);
-    return $current === $route || str_starts_with($current, $stem.'.') || $current === $stem;
+    $matches = $current === $route
+        || $current === $stem
+        || str_starts_with($current, $stem.'.');
+
+    if (! $matches) {
+        return false;
+    }
+
+    // Prefer a more specific sidebar link (e.g. Funds over Tithes on /tithes/funds).
+    foreach ($links as $other) {
+        $otherRoute = $other['route'] ?? '';
+        if ($otherRoute === $route) {
+            continue;
+        }
+
+        $otherStem = preg_replace('/\.index$/', '', $otherRoute);
+        if (! str_starts_with($otherStem, $stem.'.')) {
+            continue;
+        }
+
+        if (
+            $current === $otherRoute
+            || $current === $otherStem
+            || str_starts_with($current, $otherStem.'.')
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 };
 
 $user = auth('admin')->user();
@@ -69,11 +98,11 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
 ></div>
 
 <aside
+    class="admin-sidebar admin-sidebar--expanded fixed z-40 inset-y-0 left-0 bg-[#1F1A18] text-[#FAF7F2] flex flex-col"
     :class="[
         collapsed ? 'admin-sidebar--collapsed' : 'admin-sidebar--expanded',
         sidebar ? 'admin-sidebar--open' : '',
     ]"
-    class="admin-sidebar fixed z-40 inset-y-0 left-0 bg-[#1F1A18] text-[#FAF7F2] flex flex-col"
     aria-label="Admin navigation"
 >
     {{-- Brand + collapse toggle --}}
@@ -84,15 +113,15 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
                     <img
                         src="{{ $brandLogoUrl }}"
                         alt="{{ $adminBrand }}"
-                        class="object-contain shrink-0 mt-0.5"
-                        :class="collapsed ? 'h-8 w-8' : 'h-9 w-auto max-w-[52px]'"
+                        class="object-contain shrink-0 mt-0.5 h-9 w-auto max-w-[52px]"
+                        :class="collapsed ? 'h-8 w-8 max-w-none' : 'h-9 w-auto max-w-[52px]'"
                     >
                 @else
                     <span class="h-8 w-8 rounded-md bg-brand-primary flex items-center justify-center text-white font-serif text-sm shrink-0">
                         {{ mb_strtoupper(mb_substr($adminBrand, 0, 1)) }}
                     </span>
                 @endif
-                <span class="leading-snug min-w-0 pt-0.5" x-show="!collapsed" x-cloak>
+                <span class="admin-sidebar-label leading-snug min-w-0 pt-0.5">
                     <span class="block text-[12px] font-semibold text-white leading-snug">{{ $adminBrand }}</span>
                     <span class="block text-[10px] text-white/55 mt-1 leading-none">{{ $adminTagline }}</span>
                 </span>
@@ -100,7 +129,7 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
             <button
                 type="button"
                 class="hidden lg:inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-white/50 hover:bg-white/10 hover:text-white transition mt-0.5"
-                @click="collapsed = !collapsed; localStorage.setItem('adminSidebarCollapsed', collapsed ? '1' : '0')"
+                @click="setCollapsed(!collapsed)"
                 :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
                 :title="collapsed ? 'Expand' : 'Collapse'"
             >
@@ -120,7 +149,7 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
                     href="{{ Route::has($l['route']) ? route($l['route']) : '#' }}"
                     :title="collapsed ? '{{ $l['label'] }}' : null"
                     @class([
-                        'group relative mx-1.5 mb-0.5 flex items-center gap-3 rounded-lg transition',
+                        'admin-sidebar-link group relative mx-1.5 mb-0.5 flex items-center gap-3 rounded-lg transition px-3 py-2',
                         'bg-white/10 text-brand-secondary font-medium' => $isActive($l['route']),
                         'text-white/65 hover:bg-white/8 hover:text-white' => ! $isActive($l['route']),
                     ])
@@ -129,9 +158,9 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-90">
                         {!! $icons[$l['icon']] ?? $icons['doc'] !!}
                     </svg>
-                    <span class="text-[13px] truncate" x-show="!collapsed" x-cloak>{{ $l['label'] }}</span>
+                    <span class="admin-sidebar-label text-[13px] truncate">{{ $l['label'] }}</span>
                     @if(!empty($l['badge']))
-                        <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/55" x-show="!collapsed" x-cloak>{{ $l['badge'] }}</span>
+                        <span class="admin-sidebar-label ml-auto text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/55">{{ $l['badge'] }}</span>
                     @endif
 
                     {{-- Tooltip when collapsed --}}
@@ -145,9 +174,9 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
         @endforeach
     </nav>
 
-    <div class="shrink-0 border-t border-white/10 flex items-center gap-2.5 px-2 py-3" :class="collapsed ? 'justify-center' : 'px-3'">
+    <div class="admin-sidebar-foot shrink-0 border-t border-white/10 flex items-center gap-2.5 px-3 py-3" :class="collapsed ? 'justify-center px-2' : 'px-3'">
         <div class="w-8 h-8 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center text-[11px] font-semibold shrink-0">{{ $initials }}</div>
-        <div class="leading-tight min-w-0 overflow-hidden" x-show="!collapsed" x-cloak>
+        <div class="admin-sidebar-label leading-tight min-w-0 overflow-hidden">
             <div class="text-white text-[12px] truncate">{{ $user?->name ?? 'Admin' }}</div>
             <div class="text-[10px] text-white/50 truncate">{{ $user?->roles?->first()?->name ?? 'Administrator' }}</div>
         </div>

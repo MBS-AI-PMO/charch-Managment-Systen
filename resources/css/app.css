@@ -1079,12 +1079,34 @@ button.site-mobile-nav-chip:hover {
 .admin-sidebar--collapsed {
   width: 3.5rem;
 }
+/* First paint from <html data-admin-sidebar> — before Alpine boots */
+html[data-admin-sidebar="collapsed"] .admin-sidebar {
+  width: 3.5rem;
+}
+html[data-admin-sidebar="collapsed"] .admin-sidebar-label {
+  display: none !important;
+}
+html[data-admin-sidebar="collapsed"] .admin-sidebar-link {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  height: 2.5rem;
+}
+html[data-admin-sidebar="collapsed"] .admin-sidebar-foot {
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.admin-sidebar--collapsed .admin-sidebar-label {
+  display: none !important;
+}
 @media (min-width: 1024px) {
   .admin-main {
     padding-left: 15rem;
     transition: padding-left 200ms ease-out;
   }
-  .admin-main--collapsed {
+  .admin-main--collapsed,
+  html[data-admin-sidebar="collapsed"] .admin-main {
     padding-left: 3.5rem;
   }
   .admin-sidebar {

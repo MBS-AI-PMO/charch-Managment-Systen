@@ -2,26 +2,26 @@
     <div class="flex items-center justify-between mb-6">
         <h1 class="font-serif text-2xl">Tithes</h1>
         <div class="flex gap-2">
-            <a href="{{ route('admin.tithes.export', request()->only(['fund'])) }}" class="btn-secondary text-sm">Export CSV</a>
+            <a href="{{ route('admin.tithes.export', request()->only(['fund'])) }}" class="btn-ghost text-sm">Export CSV</a>
             <a href="{{ route('admin.tithes.create') }}" class="btn-primary text-sm">+ Record gift</a>
         </div>
     </div>
 
-    <form method="GET" class="card p-4 mb-4 grid sm:grid-cols-3 gap-3">
-        <select name="fund" class="border rounded p-2">
+    <form method="GET" class="card p-4 mb-4 flex flex-wrap items-center gap-3">
+        <select name="fund" class="input w-44 text-sm">
             <option value="">All funds</option>
             @foreach($funds as $f)
                 <option value="{{ $f->id }}" @selected(($filters['fund'] ?? null) == $f->id)>{{ $f->name }}</option>
             @endforeach
         </select>
-        <select name="method" class="border rounded p-2">
+        <select name="method" class="input w-40 text-sm">
             <option value="">All methods</option>
             @foreach(['cash', 'bank_transfer', 'cheque', 'other'] as $m)
                 <option value="{{ $m }}" @selected(($filters['method'] ?? null) === $m)>{{ ucfirst(str_replace('_', ' ', $m)) }}</option>
             @endforeach
         </select>
-        <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search giver or reference" class="border rounded p-2">
-        <div class="sm:col-span-3"><button class="btn-secondary text-sm">Filter</button></div>
+        <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search giver or reference" class="input w-56 text-sm">
+        <button type="submit" class="btn-ghost text-sm">Filter</button>
     </form>
 
     <div class="card p-0 overflow-x-auto">
