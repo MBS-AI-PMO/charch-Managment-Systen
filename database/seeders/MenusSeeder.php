@@ -16,6 +16,7 @@ class MenusSeeder extends Seeder
             ['label' => 'Home', 'link_type' => 'route', 'link_value' => 'site.home'],
             ['label' => 'About', 'link_type' => 'route', 'link_value' => 'site.about'],
             ['label' => 'Sermons', 'link_type' => 'route', 'link_value' => 'site.sermons.index'],
+            ['label' => 'Gallery', 'link_type' => 'route', 'link_value' => 'site.gallery.index'],
             ['label' => 'Events', 'link_type' => 'route', 'link_value' => 'site.events.index'],
             ['label' => 'Ministries', 'link_type' => 'route', 'link_value' => 'site.ministries.index'],
             ['label' => 'Our Churches', 'link_type' => 'route', 'link_value' => 'site.churches'],

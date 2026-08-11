@@ -143,12 +143,14 @@
       /></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach($ministries->take(4) as $i => $ministry)
-          <a href="{{ route('site.ministries.show', $ministry) }}" class="reveal-zoom delay-{{ ($i % 4) + 1 }} group lift-card block">
+          <a href="{{ route('site.ministries.show', $ministry) }}" class="reveal-zoom delay-{{ ($i % 4) + 1 }} group lift-card block rounded-xl">
             <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-sm group-hover:shadow-lg transition">
               <div class="lift-image w-full h-full bg-cover bg-center" style="background-image:url('{{ site_img($ministry->cover_image_path, 'ministry-'.$ministry->id, 800, 600) }}')"></div>
             </div>
-            <h3 class="font-serif text-xl mt-4 group-hover:text-brand-primary transition-colors">{{ $ministry->name }}</h3>
-            <p class="text-sm text-ink-muted mt-1 leading-relaxed">{{ $ministry->summary }}</p>
+            <div class="px-4 pb-4">
+              <h3 class="font-serif text-xl mt-4 group-hover:text-brand-primary transition-colors">{{ $ministry->name }}</h3>
+              <p class="text-sm text-ink-muted mt-1 leading-relaxed">{{ $ministry->summary }}</p>
+            </div>
           </a>
         @endforeach
       </div>

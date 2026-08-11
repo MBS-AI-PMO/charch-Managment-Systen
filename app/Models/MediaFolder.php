@@ -11,6 +11,11 @@ class MediaFolder extends Model
 
     protected $guarded = [];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function parent()
     {
         return $this->belongsTo(MediaFolder::class, 'parent_id');

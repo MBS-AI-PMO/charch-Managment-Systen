@@ -59,9 +59,30 @@
       ]);
   }
 
-  // Media dropdown = Sermons only. Events stays its own top-level tab.
+  // Ensure Gallery appears even before menus are re-seeded.
+  $hasGallery = $navItems->contains(function ($item) {
+      $label = strtolower(trim((string) ($item['label'] ?? '')));
+
+      return $label === 'gallery';
+  });
+
+  if (! $hasGallery && \Illuminate\Support\Facades\Route::has('site.gallery.index')) {
+      $navItems->push([
+          'label' => 'Gallery',
+          'url' => route('site.gallery.index', [], false),
+          'target' => '_self',
+          'children' => [],
+      ]);
+  }
+
+  // Media dropdown groups Sermons + Gallery. Events stays its own top-level tab.
   $navGroups = [
-      'Media' => ['sermons'],
+      'Media' => ['sermons', 'gallery'],
+  ];
+
+  $dropdownMeta = [
+      'sermons' => ['icon' => 'sermons'],
+      'gallery' => ['icon' => 'gallery'],
   ];
 
   $groupedNav = [];
@@ -174,10 +195,30 @@
             >
               <div class="site-header-dropdown">
                 @if(!empty($item['url']) && $item['url'] !== '#')
-                  <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" class="site-header-dropdown-link">{{ $item['label'] }}</a>
+                  @php
+                    $parentKey = strtolower(trim((string) $item['label']));
+                    $parentMeta = $dropdownMeta[$parentKey] ?? null;
+                    $parentActive = $isActive($item['url'] ?? null);
+                  @endphp
+                  <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @class(['site-header-dropdown-link', 'is-active' => $parentActive])>
+                    <span class="site-header-dropdown-icon" aria-hidden="true">
+                      @include('components.site.partials.nav-dropdown-icon', ['icon' => $parentMeta['icon'] ?? 'link'])
+                    </span>
+                    <span class="site-header-dropdown-title">{{ $item['label'] }}</span>
+                  </a>
                 @endif
                 @foreach($children as $child)
-                  <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" class="site-header-dropdown-link">{{ $child['label'] }}</a>
+                  @php
+                    $childKey = strtolower(trim((string) ($child['label'] ?? '')));
+                    $childMeta = $dropdownMeta[$childKey] ?? null;
+                    $childActive = $isActive($child['url'] ?? null);
+                  @endphp
+                  <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" @class(['site-header-dropdown-link', 'is-active' => $childActive])>
+                    <span class="site-header-dropdown-icon" aria-hidden="true">
+                      @include('components.site.partials.nav-dropdown-icon', ['icon' => $childMeta['icon'] ?? 'link'])
+                    </span>
+                    <span class="site-header-dropdown-title">{{ $child['label'] }}</span>
+                  </a>
                 @endforeach
               </div>
             </div>
@@ -249,10 +290,10 @@
               </summary>
               <div class="site-mobile-nav-sub">
                 @if(!empty($item['url']) && $item['url'] !== '#')
-                  <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false">{{ $item['label'] }}</a>
+                  <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $item['label'] }}</a>
                 @endif
                 @foreach($children as $child)
-                  <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" @click="open=false">{{ $child['label'] }}</a>
+                  <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $child['label'] }}</a>
                 @endforeach
               </div>
             </details>

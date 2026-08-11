@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
@@ -75,6 +76,12 @@ Route::middleware(['auth:admin', 'admin'])
         Route::post('media/folders', [MediaFolderController::class, 'store'])->name('media.folders.store')->middleware('permission:manage-media');
         Route::patch('media/folders/{folder}', [MediaFolderController::class, 'update'])->name('media.folders.update')->middleware('permission:manage-media');
         Route::delete('media/folders/{folder}', [MediaFolderController::class, 'destroy'])->name('media.folders.destroy')->middleware('permission:manage-media');
+
+        Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index')->middleware('permission:manage-media');
+        Route::post('gallery', [GalleryController::class, 'store'])->name('gallery.store')->middleware('permission:manage-media');
+        Route::post('gallery/{media}/replace', [GalleryController::class, 'replace'])->name('gallery.replace')->middleware('permission:manage-media');
+        Route::patch('gallery/{media}', [GalleryController::class, 'update'])->name('gallery.update')->middleware('permission:manage-media');
+        Route::delete('gallery/{media}', [GalleryController::class, 'destroy'])->name('gallery.destroy')->middleware('permission:manage-media');
 
         Route::resource('menus', MenuController::class)
             ->middleware('permission:manage-menus');
