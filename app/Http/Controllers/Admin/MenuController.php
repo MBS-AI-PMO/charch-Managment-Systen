@@ -14,7 +14,7 @@ class MenuController extends Controller
         $menus = Menu::withCount('items')->orderBy('name')->get();
         return view('admin.menus.index', compact('menus'));
     }
-
+    
     public function create()
     {
         return view('admin.menus.create', ['menu' => new Menu()]);

@@ -30,7 +30,7 @@ class HeroSlideSeeder extends Seeder
                 'sub' => 'Catch the latest message from our teaching team and revisit the series shaping our church.',
                 'primary_cta_url' => '/sermons',
                 'primary_cta_label' => 'Watch a sermon',
-                'secondary_cta_url' => '/blog',
+                'secondary_cta_url' => '/news',
                 'secondary_cta_label' => 'Read the news',
                 'is_active' => true,
             ],

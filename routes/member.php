@@ -59,6 +59,12 @@ Route::middleware(['auth:web', 'verified'])->prefix('member')->name('member.')->
     Route::get('/questions', [QuestionController::class, 'index'])->name('questions.index');
     Route::get('/questions/{question}', [QuestionController::class, 'show'])->name('questions.show');
 
+    Route::get('/certificates', [\App\Http\Controllers\Member\CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificates/{certificate}', [\App\Http\Controllers\Member\CertificateController::class, 'show'])->name('certificates.show');
+    Route::get('/certificates/{certificate}/preview', [\App\Http\Controllers\Member\CertificateController::class, 'preview'])->name('certificates.preview');
+    Route::get('/certificates/{certificate}/print', [\App\Http\Controllers\Member\CertificateController::class, 'print'])->name('certificates.print');
+    Route::get('/certificates/{certificate}/pdf', [\App\Http\Controllers\Member\CertificateController::class, 'pdf'])->name('certificates.pdf');
+
     // M4 Prayer Requests
     Route::post('/prayer-requests', [\App\Http\Controllers\Member\PrayerRequestController::class, 'store'])
         ->middleware('throttle:prayer-submit')

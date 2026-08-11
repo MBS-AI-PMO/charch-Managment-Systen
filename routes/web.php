@@ -33,7 +33,9 @@ Route::permanentRedirect('/site.donate', '/donate');
 Route::permanentRedirect('/site.sermons.index', '/sermons');
 Route::permanentRedirect('/site.events.index', '/events');
 Route::permanentRedirect('/site.ministries.index', '/ministries');
-Route::permanentRedirect('/site.blog.index', '/blog');
+Route::permanentRedirect('/site.blog.index', '/news');
+Route::permanentRedirect('/blog', '/news');
+Route::permanentRedirect('/blog/{post}', '/news/{post}');
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,7 @@ Route::permanentRedirect('/site.blog.index', '/blog');
 Route::name('site.')->group(function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/about', [PageController::class, 'about'])->name('about');
+    Route::get('/our-churches', [PageController::class, 'churches'])->name('churches');
     Route::get('/donate', [PageController::class, 'donate'])->name('donate');
 
     Route::get('/contact', [ContactController::class, 'show'])->name('contact');
@@ -65,8 +68,8 @@ Route::name('site.')->group(function () {
     Route::get('/ministries', [MinistryController::class, 'index'])->name('ministries.index');
     Route::get('/ministries/{ministry:slug}', [MinistryController::class, 'show'])->name('ministries.show');
 
-    Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-    Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+    Route::get('/news', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/news/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
 
     Route::get('/qa', [QaController::class, 'index'])->name('qa.index');
 });

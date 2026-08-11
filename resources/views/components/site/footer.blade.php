@@ -7,7 +7,7 @@
     ? settings('footer.about', 'A welcoming community for everyone — wherever you are on the journey.')
     : 'A welcoming community for everyone — wherever you are on the journey.';
 @endphp
-<footer class="site-footer bg-ink text-white mt-10 md:mt-16">
+<footer class="site-footer bg-ink text-white">
   <div class="site-footer-accent" aria-hidden="true"></div>
 
   <div class="max-w-container mx-auto px-4 sm:px-6 pt-10 md:pt-14 pb-8 md:pb-12">
@@ -96,7 +96,7 @@
             @endif
             @if(\Illuminate\Support\Facades\Route::has('site.donate'))
               <a href="{{ route('site.donate') }}" class="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-3.5 py-2 text-xs font-medium text-white/80 hover:bg-brand-secondary hover:border-brand-secondary hover:text-ink transition-colors">
-                {{ function_exists('settings') ? settings('donate.button_label', 'Give') : 'Give' }}
+                {{ function_exists('settings') ? settings('donate.button_label', 'Donate') : 'Donate' }}
               </a>
             @endif
           </div>

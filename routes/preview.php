@@ -31,20 +31,25 @@ Route::prefix('preview/member')->name('preview.member.')->group(function () {
     Route::view('/donate',            'preview.member.donate')->name('donate');
 });
 
-Route::prefix('admin/preview')->name('admin.preview.')->group(function () {
-    Route::view('/login', 'preview.admin.login')->name('login');
-    Route::view('/', 'preview.admin.dashboard')->name('dashboard');
-    Route::view('/pages', 'preview.admin.pages.index')->name('pages');
-    Route::view('/pages/edit', 'preview.admin.pages.edit')->name('pages.edit');
-    Route::view('/blog', 'preview.admin.blog.index')->name('blog');
-    Route::view('/blog/edit', 'preview.admin.blog.edit')->name('blog.edit');
-    Route::view('/sermons', 'preview.admin.sermons.index')->name('sermons');
-    Route::view('/events', 'preview.admin.events.index')->name('events');
-    Route::view('/ministries', 'preview.admin.ministries.index')->name('ministries');
-    Route::view('/media', 'preview.admin.media')->name('media');
-    Route::view('/menus', 'preview.admin.menus')->name('menus');
-    Route::view('/messages', 'preview.admin.messages')->name('messages');
-    Route::view('/users', 'preview.admin.users')->name('users');
-    Route::view('/roles', 'preview.admin.roles')->name('roles');
-    Route::view('/settings', 'preview.admin.settings')->name('settings');
-});
+// Admin design previews sit under /admin/* so they must use the same
+// auth gate as the real dashboard — never expose them to guests.
+Route::middleware(['auth:admin', 'admin'])
+    ->prefix('admin/preview')
+    ->name('admin.preview.')
+    ->group(function () {
+        Route::view('/login', 'preview.admin.login')->name('login');
+        Route::view('/', 'preview.admin.dashboard')->name('dashboard');
+        Route::view('/pages', 'preview.admin.pages.index')->name('pages');
+        Route::view('/pages/edit', 'preview.admin.pages.edit')->name('pages.edit');
+        Route::view('/blog', 'preview.admin.blog.index')->name('blog');
+        Route::view('/blog/edit', 'preview.admin.blog.edit')->name('blog.edit');
+        Route::view('/sermons', 'preview.admin.sermons.index')->name('sermons');
+        Route::view('/events', 'preview.admin.events.index')->name('events');
+        Route::view('/ministries', 'preview.admin.ministries.index')->name('ministries');
+        Route::view('/media', 'preview.admin.media')->name('media');
+        Route::view('/menus', 'preview.admin.menus')->name('menus');
+        Route::view('/messages', 'preview.admin.messages')->name('messages');
+        Route::view('/users', 'preview.admin.users')->name('users');
+        Route::view('/roles', 'preview.admin.roles')->name('roles');
+        Route::view('/settings', 'preview.admin.settings')->name('settings');
+    });
