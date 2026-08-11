@@ -21,9 +21,9 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             {{-- Vertical tab nav --}}
-            <aside class="card p-3 h-fit">
+            <aside class="card p-3 h-fit lg:sticky lg:top-24">
                 <nav class="space-y-1">
                     @foreach(['branding' => 'Branding', 'contact' => 'Contact', 'social' => 'Social', 'footer' => 'Footer', 'seo' => 'SEO', 'mail' => 'Mail', 'reminders' => 'Reminders'] as $key => $label)
                         <button type="button" @click="tab='{{ $key }}'" :class="tab==='{{ $key }}' ? 'bg-brand-primary/10 text-brand-primary' : 'text-ink-muted hover:bg-surface'" class="w-full text-left px-3 py-2 rounded text-sm transition">{{ $label }}</button>

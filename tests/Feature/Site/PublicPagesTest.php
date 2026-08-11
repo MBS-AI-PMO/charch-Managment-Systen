@@ -87,6 +87,10 @@ it('renders the contact page', function () {
     $this->get('/contact')->assertOk();
 });
 
+it('renders the gallery page', function () {
+    $this->get('/gallery')->assertOk()->assertSee('Gallery');
+});
+
 it('returns 404 for an unpublished blog post', function () {
     $post = BlogPost::factory()->draft()->create();
     $this->get(route('site.blog.show', $post))->assertNotFound();

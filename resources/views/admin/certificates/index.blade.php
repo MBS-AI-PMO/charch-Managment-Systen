@@ -44,7 +44,6 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-2 flex-wrap">
-                                    <a href="{{ route('admin.certificates.show', $certificate) }}" class="btn-ghost text-xs">View</a>
                                     <a href="{{ route('admin.certificates.preview', $certificate) }}" target="_blank" class="btn-ghost text-xs">Preview</a>
                                     <a href="{{ route('admin.certificates.pdf', $certificate) }}" class="btn-ghost text-xs">Export PDF</a>
                                     <a href="{{ route('admin.certificates.print', $certificate) }}" target="_blank" class="btn-ghost text-xs">Print</a>

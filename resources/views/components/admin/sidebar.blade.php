@@ -15,18 +15,21 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
     :class="collapsed ? 'admin-sidebar--collapsed' : 'admin-sidebar--expanded'"
     aria-label="Admin navigation"
 >
-    <div class="shrink-0 border-b border-white/10 px-2 py-3">
-        <div class="flex items-start gap-2">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-start gap-2.5 min-w-0 flex-1" :title="collapsed ? '{{ $adminBrand }}' : null">
+    <div class="admin-sidebar-head shrink-0 border-b border-white/10 px-2 py-3">
+        <div
+            class="admin-sidebar-brand"
+            :class="collapsed ? 'admin-sidebar-brand--collapsed' : 'admin-sidebar-brand--expanded'"
+        >
+            <a href="{{ route('admin.dashboard') }}" class="admin-sidebar-brand-link" :title="collapsed ? '{{ $adminBrand }}' : null">
                 @if($brandLogoUrl ?? null)
                     <img
                         src="{{ $brandLogoUrl }}"
                         alt="{{ $adminBrand }}"
-                        class="object-contain shrink-0 mt-0.5 h-9 w-auto max-w-[52px]"
-                        :class="collapsed ? 'h-8 w-8 max-w-none' : 'h-9 w-auto max-w-[52px]'"
+                        class="admin-sidebar-logo object-contain shrink-0"
+                        :class="collapsed ? 'admin-sidebar-logo--collapsed' : ''"
                     >
                 @else
-                    <span class="h-8 w-8 rounded-md bg-brand-primary flex items-center justify-center text-white font-serif text-sm shrink-0">
+                    <span class="admin-sidebar-logo-fallback">
                         {{ mb_strtoupper(mb_substr($adminBrand, 0, 1)) }}
                     </span>
                 @endif
@@ -37,12 +40,12 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
             </a>
             <button
                 type="button"
-                class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-white/50 hover:bg-white/10 hover:text-white transition mt-0.5"
+                class="admin-sidebar-toggle"
                 @click="setCollapsed(!collapsed)"
                 :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
                 :title="collapsed ? 'Expand' : 'Collapse'"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                      :class="collapsed ? 'rotate-180' : ''" class="transition-transform duration-200">
                     <path d="M15 6l-6 6 6 6"/>
                 </svg>

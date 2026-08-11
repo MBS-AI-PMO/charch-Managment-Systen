@@ -3,6 +3,7 @@
 use App\Http\Controllers\Site\BlogController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\EventController;
+use App\Http\Controllers\Site\GalleryController;
 use App\Http\Controllers\Site\MinistryController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\QaController;
@@ -57,6 +58,9 @@ Route::name('site.')->group(function () {
 
     Route::get('/sermons', [SermonController::class, 'index'])->name('sermons.index');
     Route::get('/sermons/{sermon:slug}', [SermonController::class, 'show'])->name('sermons.show');
+
+    Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+    Route::get('/gallery/{folder:slug}', [GalleryController::class, 'show'])->name('gallery.show');
 
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');

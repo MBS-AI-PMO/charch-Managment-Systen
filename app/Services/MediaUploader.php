@@ -99,6 +99,73 @@ class MediaUploader
     }
 
     /**
+     * Swap an existing media row's file (used by the admin Gallery).
+     * Keeps the same Media id so gallery links stay stable.
+     */
+    public function replace(Media $media, UploadedFile $file, ?User $actor = null): Media
+    {
+        $this->guard($file);
+
+        if (! str_starts_with((string) $file->getMimeType(), 'image/')) {
+            abort(422, 'Only image files can replace gallery photos.');
+        }
+
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slug = Str::slug($baseName) ?: 'photo';
+        $name = Str::random(8).'_'.$slug.'.'.$ext;
+
+        $dir = trim(dirname($media->path) ?: 'uploads', '/');
+        $dir = $dir === '' || $dir === '.' ? 'uploads' : $dir;
+        $path = $dir.'/'.$name;
+
+        $bytes = $file->getContent();
+        $mime = $file->getMimeType();
+
+        if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+            $img = Image::read($bytes);
+            if ($img->width() > self::MAX_WIDTH) {
+                $img->scaleDown(width: self::MAX_WIDTH);
+            }
+            $bytes = (string) $img->toJpeg(quality: 85);
+            $mime = 'image/jpeg';
+            if (! in_array($ext, ['jpg', 'jpeg'], true)) {
+                $path = preg_replace('/\.\w+$/', '.jpg', $path);
+                $name = preg_replace('/\.\w+$/', '.jpg', $name);
+            }
+        }
+
+        $disk = $media->disk ?: 'public';
+        $oldPath = $media->path;
+
+        Storage::disk($disk)->put($path, $bytes);
+
+        $size = [null, null];
+        if (str_starts_with($mime, 'image/')) {
+            $probe = @getimagesizefromstring($bytes);
+            if (is_array($probe)) {
+                $size = [$probe[0] ?? null, $probe[1] ?? null];
+            }
+        }
+
+        $media->update([
+            'path' => $path,
+            'filename' => $name,
+            'mime_type' => $mime,
+            'size' => strlen($bytes),
+            'width' => $size[0],
+            'height' => $size[1],
+            'uploaded_by' => $actor?->id ?: $media->uploaded_by,
+        ]);
+
+        if ($oldPath && $oldPath !== $path && Storage::disk($disk)->exists($oldPath)) {
+            Storage::disk($disk)->delete($oldPath);
+        }
+
+        return $media->fresh();
+    }
+
+    /**
      * Reject uploads that would be unsafe to store. Throws an HTTP 422
      * via abort() so controllers can let the response bubble up.
      */
