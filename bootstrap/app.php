@@ -33,8 +33,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Send unauthenticated users to the correct login screen based on the
-        // guard they tripped. Requests whose path starts with /admin go to the
-        // admin login; everything else goes to the member login.
+        // guard they tripped. Any /admin/* path (dashboard, preview, etc.)
+        // goes to the admin login — never expose admin UI to guests.
         $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
             if ($request->is('admin') || $request->is('admin/*')) {
                 return route('admin.login');

@@ -64,4 +64,44 @@ class PageController extends Controller
 
         return view('site.donate', compact('page'));
     }
+
+    public function churches()
+    {
+        $page = Page::whereIn('slug', ['our-churches', 'churches'])->published()->first();
+
+        $branches = [
+            [
+                'name' => 'Assemblies of God Church, Naseerabad',
+                'city' => 'Rawalpindi',
+                'role' => 'Main campus',
+                'address' => settings('contact.address', 'Naseerabad, Rawalpindi'),
+                'phone' => settings('contact.phone'),
+                'email' => settings('contact.email'),
+                'services' => settings('contact.service_times', "Sunday Service: 10:00 AM – 12:00 PM\nPrayer Meeting: Thursday, 6:00 PM – 7:00 PM"),
+                'note' => 'Our home congregation — gathered in worship, discipleship, and community care since 2001.',
+            ],
+            [
+                'name' => 'Assemblies of God — Satellite Fellowship',
+                'city' => 'Rawalpindi',
+                'role' => 'Branch',
+                'address' => 'Details coming soon',
+                'phone' => settings('contact.phone'),
+                'email' => settings('contact.email'),
+                'services' => 'Service times will be posted here as this fellowship grows.',
+                'note' => 'A growing fellowship connected to our main church family. Reach out to learn more or plan a visit.',
+            ],
+            [
+                'name' => 'Assemblies of God — Outreach Point',
+                'city' => 'Islamabad / Rawalpindi',
+                'role' => 'Outreach',
+                'address' => 'Contact the church office for location',
+                'phone' => settings('contact.phone'),
+                'email' => settings('contact.email'),
+                'services' => 'Seasonal gatherings and community outreach.',
+                'note' => 'An outreach point for prayer, teaching, and connecting families across the twin cities.',
+            ],
+        ];
+
+        return view('site.churches', compact('page', 'branches'));
+    }
 }

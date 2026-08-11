@@ -11,6 +11,7 @@
             <p class="text-ink-muted mt-2">Welcome back. Here's what's happening this week.</p>
             <div class="mt-5 flex flex-wrap gap-2">
                 <a href="{{ route('member.prayer.create') }}" class="btn-primary text-sm">Submit a prayer request</a>
+                <a href="{{ route('member.certificates.index') }}" class="btn-ghost text-sm">My certificates</a>
                 <a href="{{ route('member.care.create') }}" class="btn-ghost text-sm">Knock for help</a>
                 <a href="{{ route('member.questions.index') }}" class="btn-ghost text-sm">My questions</a>
                 <a href="{{ route('member.profile.edit') }}" class="btn-ghost text-sm">Update profile</a>

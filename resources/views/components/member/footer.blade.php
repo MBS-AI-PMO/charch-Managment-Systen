@@ -2,7 +2,7 @@
 $brand = function_exists('settings') ? settings('brand.name', 'Assemblies of God') : 'Assemblies of God';
 $tagline = function_exists('settings') ? settings('brand.tagline', 'Rawalpindi') : 'Rawalpindi';
 @endphp
-<footer class="bg-ink text-white mt-10 md:mt-16">
+<footer class="bg-ink text-white">
     <div class="max-w-container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
         <div>
             <h3 class="font-serif text-lg mb-0.5">{{ $brand }}</h3>
@@ -16,7 +16,7 @@ $tagline = function_exists('settings') ? settings('brand.tagline', 'Rawalpindi')
             <ul class="space-y-1.5 text-white/70">
                 <li><a href="{{ route('preview.member.dashboard') }}" class="hover:text-white">Dashboard</a></li>
                 <li><a href="{{ route('preview.member.prayer') }}" class="hover:text-white">Prayer</a></li>
-                <li><a href="{{ route('preview.member.donate') }}" class="hover:text-white">Give</a></li>
+                <li><a href="{{ route('preview.member.donate') }}" class="hover:text-white">Donate</a></li>
             </ul>
         </div>
         <div>

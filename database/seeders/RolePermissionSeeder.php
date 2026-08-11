@@ -30,6 +30,7 @@ class RolePermissionSeeder extends Seeder
             'manage-members',
             // Phase 3 additions
             'manage-tithes',
+            'manage-certificates',
         ];
 
         foreach ($perms as $p) {

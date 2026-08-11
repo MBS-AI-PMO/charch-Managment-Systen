@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\MediaController;
@@ -84,6 +85,18 @@ Route::middleware(['auth:admin', 'admin'])
             ->parameters(['items' => 'item'])
             ->shallow()
             ->middleware('permission:manage-menus');
+
+        Route::resource('certificates', CertificateController::class)
+            ->middleware('permission:manage-certificates');
+        Route::get('certificates/{certificate}/preview', [CertificateController::class, 'preview'])
+            ->name('certificates.preview')
+            ->middleware('permission:manage-certificates');
+        Route::get('certificates/{certificate}/print', [CertificateController::class, 'print'])
+            ->name('certificates.print')
+            ->middleware('permission:manage-certificates');
+        Route::get('certificates/{certificate}/pdf', [CertificateController::class, 'pdf'])
+            ->name('certificates.pdf')
+            ->middleware('permission:manage-certificates');
 
         Route::get('messages', [MessageController::class, 'index'])->name('messages.index')->middleware('permission:manage-messages');
         Route::get('messages/{message}', [MessageController::class, 'show'])->name('messages.show')->middleware('permission:manage-messages');

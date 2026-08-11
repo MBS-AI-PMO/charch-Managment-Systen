@@ -7,6 +7,19 @@ it('shows the admin login page', function () {
         ->assertOk();
 });
 
+it('redirects guests away from every admin dashboard url', function (string $url) {
+    $this->get($url)->assertRedirect(route('admin.login'));
+})->with([
+    '/admin',
+    '/admin/pages',
+    '/admin/users',
+    '/admin/settings',
+    '/admin/certificates',
+    '/admin/preview',
+    '/admin/preview/pages',
+    '/admin/preview/settings',
+]);
+
 it('logs an admin in with valid credentials', function () {
     $admin = makeAdmin(['password' => 'secret-pass-123!']);
 

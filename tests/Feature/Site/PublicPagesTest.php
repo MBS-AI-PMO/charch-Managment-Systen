@@ -29,6 +29,12 @@ it('renders the about page', function () {
     $this->get('/about')->assertOk();
 });
 
+it('renders the our churches page', function () {
+    Page::factory()->create(['slug' => 'our-churches']);
+
+    $this->get('/our-churches')->assertOk()->assertSee('Our Churches');
+});
+
 it('renders the sermons index', function () {
     Sermon::factory()->create();
 
@@ -68,7 +74,7 @@ it('renders a ministry detail', function () {
 it('renders the blog index', function () {
     BlogPost::factory()->create();
 
-    $this->get('/blog')->assertOk();
+    $this->get('/news')->assertOk();
 });
 
 it('renders a blog post', function () {

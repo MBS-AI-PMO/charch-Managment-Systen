@@ -32,7 +32,7 @@ class SiteSettingsSeeder extends Seeder
             ['key' => 'member.registration_enabled', 'value' => '1', 'type' => 'text', 'group' => 'member'],
             ['key' => 'member.welcome_message', 'value' => 'Welcome to the Assemblies of God Rawalpindi family.', 'type' => 'text', 'group' => 'member'],
             ['key' => 'member.broadcast_on_feed_default', 'value' => '0', 'type' => 'text', 'group' => 'member'],
-            ['key' => 'donate.button_label', 'value' => 'Give', 'type' => 'text', 'group' => 'donate'],
+            ['key' => 'donate.button_label', 'value' => 'Donate', 'type' => 'text', 'group' => 'donate'],
             ['key' => 'donate.show_in_member_nav', 'value' => '1', 'type' => 'text', 'group' => 'donate'],
             // Phase 3 additions
             ['key' => 'finance.currency_symbol', 'value' => '$', 'type' => 'text', 'group' => 'finance'],

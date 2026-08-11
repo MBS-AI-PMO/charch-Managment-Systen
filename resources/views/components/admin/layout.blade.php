@@ -49,8 +49,20 @@
                 this.collapsed = value;
                 document.documentElement.setAttribute('data-admin-sidebar', value ? 'collapsed' : 'expanded');
                 try { localStorage.setItem('adminSidebarCollapsed', value ? '1' : '0'); } catch (e) {}
+            },
+            syncMobileNavLock() {
+                const lock = this.sidebar && window.matchMedia('(max-width: 1023px)').matches;
+                document.documentElement.classList.toggle('overflow-hidden', lock);
             }
         }"
+        x-init="
+            $watch('sidebar', () => syncMobileNavLock());
+            window.addEventListener('resize', () => {
+                if (window.matchMedia('(min-width: 1024px)').matches) sidebar = false;
+                syncMobileNavLock();
+            });
+            syncMobileNavLock();
+        "
         class="min-h-screen"
     >
         <x-admin.sidebar />
