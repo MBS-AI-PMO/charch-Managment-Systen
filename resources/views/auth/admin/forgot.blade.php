@@ -34,6 +34,10 @@
                 <h1 class="text-2xl font-serif mb-1">Forgot your password?</h1>
                 <p class="text-sm text-ink-muted mb-8">Enter your email and we'll send you a reset link.</p>
 
+                @if (session('status'))
+                    <div class="mb-4 bg-green-50 text-green-800 border border-green-200 p-3 rounded text-sm">{{ session('status') }}</div>
+                @endif
+
                 @if ($errors->any())
                     <div class="mb-4 bg-red-50 text-red-700 border border-red-200 p-3 rounded text-sm">{{ $errors->first() }}</div>
                 @endif

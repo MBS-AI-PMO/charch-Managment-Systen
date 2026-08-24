@@ -3,7 +3,7 @@ $brand = function_exists('settings') ? settings('brand.name', 'Assemblies of God
 $tagline = function_exists('settings') ? settings('brand.tagline', 'Rawalpindi') : 'Rawalpindi';
 @endphp
 <footer class="bg-ink text-white">
-    <div class="max-w-container mx-auto px-4 py-8 md:py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+    <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
         <div>
             <h3 class="font-serif text-lg mb-0.5">{{ $brand }}</h3>
             @if($tagline)

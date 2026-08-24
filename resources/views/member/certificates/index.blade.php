@@ -1,5 +1,5 @@
 <x-member.layout title="My Certificates">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div>
             <h1 class="font-serif text-3xl">My Certificates</h1>
             <p class="text-ink-muted mt-1 text-sm">Certificates sent to you by the church admin. Open and print anytime.</p>
@@ -29,11 +29,11 @@
                                 <td class="px-4 py-3 text-ink-muted whitespace-nowrap">{{ $certificate->issued_on?->format('M j, Y') }}</td>
                                 <td class="px-4 py-3 text-ink-muted whitespace-nowrap">{{ $certificate->sent_at?->diffForHumans() }}</td>
                                 <td class="px-4 py-3">
-                                    <div class="flex items-center justify-end gap-2 flex-wrap">
-                                        <a href="{{ route('member.certificates.show', $certificate) }}" class="btn-ghost text-xs">View</a>
-                                        <a href="{{ route('member.certificates.preview', $certificate) }}" target="_blank" class="btn-ghost text-xs">Preview</a>
-                                        <a href="{{ route('member.certificates.pdf', $certificate) }}" class="btn-ghost text-xs">Export PDF</a>
-                                        <a href="{{ route('member.certificates.print', $certificate) }}" target="_blank" class="btn-primary text-xs">Print</a>
+                                    <div class="row-actions">
+                                        <x-row-action type="view" href="{{ route('member.certificates.show', $certificate) }}" />
+                                        <x-row-action type="preview" href="{{ route('member.certificates.preview', $certificate) }}" target="_blank" />
+                                        <x-row-action type="pdf" href="{{ route('member.certificates.pdf', $certificate) }}" label="Export PDF" />
+                                        <x-row-action type="print" href="{{ route('member.certificates.print', $certificate) }}" target="_blank" />
                                     </div>
                                 </td>
                             </tr>

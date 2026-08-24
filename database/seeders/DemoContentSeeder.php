@@ -177,6 +177,26 @@ class DemoContentSeeder extends Seeder
                 'meta_title' => 'Our Churches | Assemblies of God',
                 'meta_description' => 'Find Assemblies of God church campuses, branches, and fellowships near you.',
             ],
+            [
+                'slug' => 'qa',
+                'title' => 'Q&A',
+                'hero_heading' => 'What people asked — and how we answered.',
+                'hero_subheading' => 'A public history of questions from our community. Only names, questions, and answers are shown.',
+                'hero_image_path' => 'seed/about-hero.jpg',
+                'body' => '',
+                'meta_title' => 'Q&A | Assemblies of God',
+                'meta_description' => 'Public questions and answers from our church community.',
+            ],
+            [
+                'slug' => 'gallery',
+                'title' => 'Gallery',
+                'hero_heading' => 'Gallery',
+                'hero_subheading' => 'Moments from the life of our church family.',
+                'hero_image_path' => 'seed/about-hero.jpg',
+                'body' => '',
+                'meta_title' => 'Gallery | Assemblies of God',
+                'meta_description' => 'Photos from worship, events, and community life.',
+            ],
         ];
 
         foreach ($pages as $p) {

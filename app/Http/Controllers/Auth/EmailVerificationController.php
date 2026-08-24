@@ -33,7 +33,15 @@ class EmailVerificationController extends Controller
             return redirect()->route('member.dashboard');
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        try {
+            $request->user()->sendEmailVerificationNotification();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withErrors([
+                'email' => 'Could not send verification email. The mail server rejected the login (check MAIL_USERNAME / MAIL_PASSWORD on the server .env, then run php artisan config:clear).',
+            ]);
+        }
 
         return back()->with('success', 'Verification link sent.');
     }

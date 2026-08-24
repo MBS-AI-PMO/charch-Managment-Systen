@@ -31,7 +31,7 @@
                     @endif
                     <form method="POST" action="{{ route('admin.messages.destroy', $message) }}" onsubmit="return confirm('Delete this message?')">
                         @csrf @method('DELETE')
-                        <button class="btn-ghost text-sm text-red-600">Delete</button>
+                        <x-row-action type="delete" />
                     </form>
                 @endcan
             </div>

@@ -56,7 +56,7 @@
                     </form>
                     <form method="POST" action="{{ route('admin.media.folders.destroy', $currentFolder) }}" onsubmit="return confirm('Delete this folder? It must be empty.')">
                         @csrf @method('DELETE')
-                        <button type="submit" class="text-xs text-red-600 hover:underline whitespace-nowrap">Delete</button>
+                        <x-row-action type="delete" />
                     </form>
                 </div>
             @endif

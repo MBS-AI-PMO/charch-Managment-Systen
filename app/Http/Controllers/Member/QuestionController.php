@@ -18,7 +18,7 @@ class QuestionController extends Controller
             ->where('user_id', $user->id)
             ->withCount('replies')
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
 
         return view('member.questions.index', compact('items'));
     }

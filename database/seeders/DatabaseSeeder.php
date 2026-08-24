@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             MenusSeeder::class,
             TitheFundSeeder::class,
             HeroSlideSeeder::class,
+            ChurchBranchSeeder::class,
         ]);
 
         if (app()->environment('local')) {

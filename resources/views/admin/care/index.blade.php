@@ -73,8 +73,10 @@
                             </td>
                             <td class="px-5 py-3 text-ink-muted max-w-md truncate">{{ \Illuminate\Support\Str::limit($r->message, 80) }}</td>
                             <td class="px-5 py-3 text-ink-muted whitespace-nowrap">{{ $r->created_at?->diffForHumans() }}</td>
-                            <td class="px-5 py-3 text-right whitespace-nowrap">
-                                <a href="{{ route('admin.care.show', $r) }}" class="text-xs text-brand-primary hover:underline">View</a>
+                            <td class="px-5 py-3 text-right">
+                                <div class="row-actions">
+                                    <x-row-action type="view" href="{{ route('admin.care.show', $r) }}" />
+                                </div>
                             </td>
                         </tr>
                     @empty

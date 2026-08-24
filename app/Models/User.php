@@ -6,7 +6,9 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -66,5 +68,33 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_weekly_digest' => 'boolean',
             'email_admin_daily_digest' => 'boolean',
         ];
+    }
+
+    public function avatarUrl(): ?string
+    {
+        return $this->avatar_path ? site_storage_url($this->avatar_path) : null;
+    }
+
+    public function replaceAvatar(UploadedFile $file): void
+    {
+        $this->deleteStoredAvatar();
+        $this->avatar_path = $file->store('uploads/avatars', 'public');
+    }
+
+    public function clearAvatar(): void
+    {
+        $this->deleteStoredAvatar();
+        $this->avatar_path = null;
+    }
+
+    protected function deleteStoredAvatar(): void
+    {
+        $path = ltrim((string) $this->avatar_path, '/');
+        if ($path === '' || ! str_starts_with($path, 'uploads/avatars/')) {
+            return;
+        }
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

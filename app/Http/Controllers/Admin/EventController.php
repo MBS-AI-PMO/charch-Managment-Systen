@@ -17,7 +17,7 @@ class EventController extends Controller
         } else {
             $q->where('starts_at', '>=', now())->orderBy('starts_at');
         }
-        $events = $q->paginate(20)->withQueryString();
+        $events = $q->paginate(10)->withQueryString();
         $upcomingCount = Event::where('starts_at', '>=', now())->count();
         $pastCount = Event::where('starts_at', '<', now())->count();
         return view('admin.events.index', compact('events', 'tab', 'upcomingCount', 'pastCount'));

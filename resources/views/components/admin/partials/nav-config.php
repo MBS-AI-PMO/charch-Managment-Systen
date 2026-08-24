@@ -3,6 +3,8 @@
 $adminNavLinks = [
     ['route' => 'admin.dashboard',            'label' => 'Dashboard',        'icon' => 'home',      'permission' => null],
     ['route' => 'admin.pages.index',          'label' => 'Pages',            'icon' => 'doc',       'permission' => 'manage-pages'],
+    ['route' => 'admin.churches.index',       'label' => 'Church Branches',  'icon' => 'church',    'permission' => 'manage-pages'],
+    ['route' => 'admin.hero-slides.index',    'label' => 'Hero Slides',      'icon' => 'slides',    'permission' => 'manage-pages'],
     ['route' => 'admin.blog.posts.index',     'label' => 'News',             'icon' => 'pen',       'permission' => 'manage-blog'],
     ['route' => 'admin.sermons.index',        'label' => 'Sermons',          'icon' => 'mic',       'permission' => 'manage-sermons'],
     ['route' => 'admin.events.index',         'label' => 'Events',           'icon' => 'calendar',  'permission' => 'manage-events'],
@@ -28,6 +30,8 @@ $adminNavLinks = [
 $adminNavIcons = [
     'home'      => '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/>',
     'doc'       => '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
+    'church'    => '<path d="M12 3 4 9v12h16V9Z"/><path d="M9 21V12h6v9"/><path d="M12 3v4"/>',
+    'slides'    => '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M7 9h10M7 13h6"/>',
     'pen'       => '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/>',
     'mic'       => '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>',
     'calendar'  => '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',

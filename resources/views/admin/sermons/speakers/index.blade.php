@@ -38,14 +38,16 @@
                         </td>
                         <td class="px-5 py-3 text-ink-muted">{{ $sp->role ?? '—' }}</td>
                         <td class="px-5 py-3 text-ink-muted">{{ $sp->sermons_count ?? 0 }}</td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ route('admin.sermons.speakers.edit', $sp) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                            @can('manage-sermons')
-                                <form method="POST" action="{{ route('admin.sermons.speakers.destroy', $sp) }}" class="inline ml-3" onsubmit="return confirm('Delete this speaker?')">
-                                    @csrf @method('DELETE')
-                                    <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
-                            @endcan
+                        <td class="px-5 py-3 text-right">
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.sermons.speakers.edit', $sp) }}" />
+                                @can('manage-sermons')
+                                    <form method="POST" action="{{ route('admin.sermons.speakers.destroy', $sp) }}" onsubmit="return confirm('Delete this speaker?')">
+                                        @csrf @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty

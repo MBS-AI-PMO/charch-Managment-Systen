@@ -11,7 +11,7 @@ class PageController extends Controller
 {
     public function index()
     {
-        $pages = Page::with('revisions.user')->orderBy('title')->paginate(20);
+        $pages = Page::with('revisions.user')->orderBy('title')->paginate(10);
         return view('admin.pages.index', compact('pages'));
     }
 

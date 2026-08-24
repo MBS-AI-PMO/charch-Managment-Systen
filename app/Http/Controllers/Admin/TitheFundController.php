@@ -12,7 +12,7 @@ class TitheFundController extends Controller
     public function index()
     {
         return view('admin.tithes.funds.index', [
-            'funds' => TitheFund::orderBy('sort_order')->orderBy('name')->get(),
+            'funds' => TitheFund::orderBy('sort_order')->orderBy('name')->paginate(10),
         ]);
     }
 

@@ -36,14 +36,16 @@
                             <span>{{ $row->name }}</span>
                         </td>
                         <td class="px-5 py-3 text-ink-muted">{{ $row->sermons_count ?? 0 }}</td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ route('admin.sermons.series.edit', $row) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                            @can('manage-sermons')
-                                <form method="POST" action="{{ route('admin.sermons.series.destroy', $row) }}" class="inline ml-3" onsubmit="return confirm('Delete this series?')">
-                                    @csrf @method('DELETE')
-                                    <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
-                            @endcan
+                        <td class="px-5 py-3 text-right">
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.sermons.series.edit', $row) }}" />
+                                @can('manage-sermons')
+                                    <form method="POST" action="{{ route('admin.sermons.series.destroy', $row) }}" onsubmit="return confirm('Delete this series?')">
+                                        @csrf @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty

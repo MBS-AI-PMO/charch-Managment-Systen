@@ -54,11 +54,11 @@
                         <input type="text" name="name" class="input text-xs py-1.5 min-w-0 flex-1" value="{{ $currentFolder->name }}" required>
                         <button type="submit" class="btn-ghost text-xs px-2.5 whitespace-nowrap">Rename</button>
                     </form>
-                    <div class="flex items-center gap-3 text-xs">
+                    <div class="flex items-center gap-2 text-xs">
                         <a href="{{ route('site.gallery.show', $currentFolder) }}" target="_blank" class="text-brand-primary hover:underline whitespace-nowrap">Open on site</a>
                         <form method="POST" action="{{ route('admin.media.folders.destroy', $currentFolder) }}" onsubmit="return confirm('Delete this album? It must be empty.')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline whitespace-nowrap">Delete</button>
+                            <x-row-action type="delete" />
                         </form>
                     </div>
                 </div>

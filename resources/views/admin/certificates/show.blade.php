@@ -42,52 +42,5 @@
                 </div>
             </div>
         </div>
-
-        <div class="card p-4 md:p-6">
-            <div class="flex items-center justify-between gap-3 mb-4">
-                <div class="text-xs uppercase tracking-wide text-ink-muted">Preview</div>
-                <a href="{{ route('admin.certificates.preview', $certificate) }}" target="_blank" class="text-xs text-brand-primary hover:underline">Open full size →</a>
-            </div>
-
-            <div class="cert-admin-preview rounded-xl border border-[rgb(var(--border))] bg-[#ebe4d8] p-4 md:p-6 overflow-x-auto">
-                <div class="cert-admin-preview-stage mx-auto">
-                    <div class="cert-admin-preview-scale">
-                        @include($certificate->templateView(), ['certificate' => $certificate])
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <style>
-        .cert-admin-preview-stage {
-            width: 100%;
-            max-width: 980px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 420px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-        }
-        .cert-admin-preview-scale {
-            width: 1122px;
-            height: 793px;
-            transform: scale(0.48);
-            transform-origin: top center;
-            flex-shrink: 0;
-        }
-        @media (min-width: 640px) {
-            .cert-admin-preview-stage { height: 480px; }
-            .cert-admin-preview-scale { transform: scale(0.58); }
-        }
-        @media (min-width: 1024px) {
-            .cert-admin-preview-stage { height: 560px; max-width: 1100px; }
-            .cert-admin-preview-scale { transform: scale(0.68); }
-        }
-        @media (min-width: 1280px) {
-            .cert-admin-preview-stage { height: 640px; }
-            .cert-admin-preview-scale { transform: scale(0.78); }
-        }
-    </style>
 </x-admin.layout>

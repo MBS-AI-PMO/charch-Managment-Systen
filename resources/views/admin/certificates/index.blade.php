@@ -43,14 +43,14 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-2 flex-wrap">
-                                    <a href="{{ route('admin.certificates.preview', $certificate) }}" target="_blank" class="btn-ghost text-xs">Preview</a>
-                                    <a href="{{ route('admin.certificates.pdf', $certificate) }}" class="btn-ghost text-xs">Export PDF</a>
-                                    <a href="{{ route('admin.certificates.print', $certificate) }}" target="_blank" class="btn-ghost text-xs">Print</a>
-                                    <a href="{{ route('admin.certificates.edit', $certificate) }}" class="btn-primary text-xs">Edit</a>
+                                <div class="row-actions">
+                                    <x-row-action type="preview" href="{{ route('admin.certificates.preview', $certificate) }}" target="_blank" />
+                                    <x-row-action type="pdf" href="{{ route('admin.certificates.pdf', $certificate) }}" label="Export PDF" />
+                                    <x-row-action type="print" href="{{ route('admin.certificates.print', $certificate) }}" target="_blank" />
+                                    <x-row-action type="edit" href="{{ route('admin.certificates.edit', $certificate) }}" />
                                     <form method="POST" action="{{ route('admin.certificates.destroy', $certificate) }}" onsubmit="return confirm('Delete this certificate?')">
                                         @csrf @method('DELETE')
-                                        <button class="btn-ghost text-xs text-red-600">Delete</button>
+                                        <x-row-action type="delete" />
                                     </form>
                                 </div>
                             </td>

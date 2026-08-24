@@ -22,7 +22,7 @@ class UserController extends Controller
         if ($role = $req->query('role')) {
             $q->whereHas('roles', fn ($qq) => $qq->where('name', $role));
         }
-        $users = $q->orderBy('name')->paginate(25)->withQueryString();
+        $users = $q->orderBy('name')->paginate(10)->withQueryString();
         $roles = Role::where('guard_name', 'admin')->orderBy('name')->get();
         return view('admin.users.index', compact('users', 'roles'));
     }

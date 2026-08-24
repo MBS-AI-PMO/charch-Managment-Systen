@@ -25,7 +25,7 @@
             {{-- Vertical tab nav --}}
             <aside class="card p-3 h-fit lg:sticky lg:top-24">
                 <nav class="space-y-1">
-                    @foreach(['branding' => 'Branding', 'contact' => 'Contact', 'social' => 'Social', 'footer' => 'Footer', 'seo' => 'SEO', 'mail' => 'Mail', 'reminders' => 'Reminders'] as $key => $label)
+                    @foreach(['branding' => 'Branding', 'home' => 'Home page', 'contact' => 'Contact', 'social' => 'Social', 'footer' => 'Footer', 'seo' => 'SEO', 'mail' => 'Mail', 'reminders' => 'Reminders'] as $key => $label)
                         <button type="button" @click="tab='{{ $key }}'" :class="tab==='{{ $key }}' ? 'bg-brand-primary/10 text-brand-primary' : 'text-ink-muted hover:bg-surface'" class="w-full text-left px-3 py-2 rounded text-sm transition">{{ $label }}</button>
                     @endforeach
                 </nav>
@@ -86,6 +86,59 @@
                         </div>
                         @error('brand.favicon')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         <p class="text-xs text-ink-muted mt-1">PNG, JPG, ICO or WEBP. Max 2MB. Saved favicon shows on the whole site.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-[rgb(var(--border))]">
+                        <div>
+                            <label class="block text-sm font-medium mb-1.5">Donate button label</label>
+                            <input type="text" name="donate[button_label]" class="input" value="{{ old('donate.button_label', settings('donate.button_label', 'Donate')) }}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1.5">Header visit button label</label>
+                            <input type="text" name="header[visit_cta_label]" class="input" value="{{ old('header.visit_cta_label', settings('header.visit_cta_label', 'Plan your visit')) }}">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Header visit button URL</label>
+                        <input type="text" name="header[visit_cta_url]" class="input font-mono text-sm" value="{{ old('header.visit_cta_url', settings('header.visit_cta_url', '/contact')) }}" placeholder="/contact">
+                    </div>
+                </div>
+
+                {{-- Home page --}}
+                <div x-show="tab==='home'" x-cloak class="card p-5 space-y-4">
+                    <h2 class="text-base font-serif">Home page welcome section</h2>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Eyebrow</label>
+                        <input type="text" name="home[welcome][eyebrow]" class="input" value="{{ old('home.welcome.eyebrow', settings('home.welcome.eyebrow')) }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Heading</label>
+                        <input type="text" name="home[welcome][heading]" class="input" value="{{ old('home.welcome.heading', settings('home.welcome.heading')) }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Intro line</label>
+                        <textarea name="home[welcome][lede]" rows="2" class="input">{{ old('home.welcome.lede', settings('home.welcome.lede')) }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Quote overlay</label>
+                        <input type="text" name="home[welcome][quote]" class="input" value="{{ old('home.welcome.quote', settings('home.welcome.quote')) }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Welcome photo path</label>
+                        <input type="text" name="home[welcome_image]" class="input font-mono text-sm" value="{{ old('home.welcome_image', settings('home.welcome_image')) }}" placeholder="uploads/photo.jpg">
+                        <div class="flex gap-2 mt-2">
+                            <button type="button"
+                                    onclick="openMediaPicker((url) => { document.querySelector('[name=\'home[welcome_image]\']').value = url.replace(/^.*\/storage\//,''); })"
+                                    class="btn-ghost text-xs">Pick from library</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">About page story image path</label>
+                        <input type="text" name="about[story_image]" class="input font-mono text-sm" value="{{ old('about.story_image', settings('about.story_image')) }}" placeholder="uploads/pages/story.jpg">
+                        <div class="flex gap-2 mt-2">
+                            <button type="button"
+                                    onclick="openMediaPicker((url) => { document.querySelector('[name=\'about[story_image]\']').value = url.replace(/^.*\/storage\//,''); })"
+                                    class="btn-ghost text-xs">Pick from library</button>
+                        </div>
                     </div>
                 </div>
 

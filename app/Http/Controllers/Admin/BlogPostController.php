@@ -23,7 +23,7 @@ class BlogPostController extends Controller
         if ($cat = $req->query('category')) {
             $q->where('category_id', $cat);
         }
-        $posts = $q->latest('updated_at')->paginate(20)->withQueryString();
+        $posts = $q->latest('updated_at')->paginate(10)->withQueryString();
         $categories = BlogCategory::orderBy('name')->get();
         return view('admin.blog.posts.index', compact('posts', 'categories'));
     }

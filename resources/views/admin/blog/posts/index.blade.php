@@ -52,14 +52,16 @@
                             @endif
                         </td>
                         <td class="px-5 py-3 text-ink-muted">{{ $post->published_at?->format('M j, Y') ?? '—' }}</td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ route('admin.blog.posts.edit', $post) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                            @can('manage-blog')
-                                <form method="POST" action="{{ route('admin.blog.posts.destroy', $post) }}" class="inline ml-3" onsubmit="return confirm('Delete this post?')">
-                                    @csrf @method('DELETE')
-                                    <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
-                            @endcan
+                        <td class="px-5 py-3 text-right">
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.blog.posts.edit', $post) }}" />
+                                @can('manage-blog')
+                                    <form method="POST" action="{{ route('admin.blog.posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?')">
+                                        @csrf @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty

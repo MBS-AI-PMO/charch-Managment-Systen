@@ -41,13 +41,15 @@
                                     <span class="text-ink-muted text-xs">—</span>
                                 @endif
                             </td>
-                            <td class="px-5 py-3 text-right whitespace-nowrap">
-                                <a href="{{ route('admin.feed.edit', $post) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                                <form method="POST" action="{{ route('admin.feed.destroy', $post) }}" class="inline ml-2" onsubmit="return confirm('Delete this post?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
+                            <td class="px-5 py-3 text-right">
+                                <div class="row-actions">
+                                    <x-row-action type="edit" href="{{ route('admin.feed.edit', $post) }}" />
+                                    <form method="POST" action="{{ route('admin.feed.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

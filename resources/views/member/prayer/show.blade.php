@@ -10,7 +10,7 @@
     [$bg,$tx] = $statusMap[$prayer->status ?? 'pending'] ?? $statusMap['pending'];
 @endphp
 <x-member.layout title="{{ $prayer->title }}">
-    <div class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <a href="{{ route('member.prayer.index') }}" class="text-sm text-ink-muted hover:text-brand-primary">&larr; Back to prayer wall</a>
 
         <article class="card p-6 md:p-8 space-y-5">
@@ -47,10 +47,10 @@
             @endif
 
             @if($isOwner)
-                <div class="flex flex-wrap gap-3 pt-2 text-xs">
+                <div class="pt-2">
                     <form method="POST" action="{{ route('member.prayer.destroy', $prayer) }}" onsubmit="return confirm('Delete this prayer request?')">
                         @csrf @method('DELETE')
-                        <button type="submit" class="text-ink-muted hover:text-red-600">Delete</button>
+                        <x-row-action type="delete" />
                     </form>
                 </div>
             @endif

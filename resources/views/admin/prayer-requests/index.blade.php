@@ -64,8 +64,10 @@
                             </td>
                             <td class="px-5 py-3 text-ink-muted">{{ $p->pray_count }}</td>
                             <td class="px-5 py-3 text-ink-muted">{{ $p->created_at?->diffForHumans() }}</td>
-                            <td class="px-5 py-3 text-right whitespace-nowrap">
-                                <a href="{{ route('admin.prayer-requests.show', $p) }}" class="text-xs text-brand-primary hover:underline">View</a>
+                            <td class="px-5 py-3 text-right">
+                                <div class="row-actions">
+                                    <x-row-action type="view" href="{{ route('admin.prayer-requests.show', $p) }}" />
+                                </div>
                             </td>
                         </tr>
                     @empty

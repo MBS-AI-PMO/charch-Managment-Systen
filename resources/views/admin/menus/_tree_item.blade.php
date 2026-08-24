@@ -9,13 +9,15 @@
             <div class="text-sm font-medium truncate">{{ $item->label }}</div>
             <div class="text-xs text-ink-muted font-mono truncate">{{ $item->link_type }}: {{ $item->link_value }}</div>
         </div>
-        <a href="{{ route('admin.items.edit', $item) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-        @can('manage-menus')
-            <form method="POST" action="{{ route('admin.items.destroy', $item) }}" onsubmit="return confirm('Remove this item?')">
-                @csrf @method('DELETE')
-                <button class="text-xs text-red-600 hover:underline">Remove</button>
-            </form>
-        @endcan
+        <div class="row-actions">
+            <x-row-action type="edit" href="{{ route('admin.items.edit', $item) }}" />
+            @can('manage-menus')
+                <form method="POST" action="{{ route('admin.items.destroy', $item) }}" onsubmit="return confirm('Remove this item?')">
+                    @csrf @method('DELETE')
+                    <x-row-action type="remove" />
+                </form>
+            @endcan
+        </div>
     </div>
     <ul class="menu-children">
         @foreach($children as $child)

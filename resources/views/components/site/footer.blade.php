@@ -34,7 +34,7 @@
       {{-- Explore --}}
       <div class="lg:col-span-3 lg:pl-2">
         <h4 class="site-footer-heading">Explore</h4>
-        <ul class="site-footer-links columns-1 sm:columns-2 lg:columns-1 gap-x-8">
+        <ul class="site-footer-links">
           {{ $links ?? '' }}
         </ul>
       </div>

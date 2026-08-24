@@ -52,17 +52,19 @@
                         </td>
                         <td class="px-5 py-3 text-ink-muted">{{ $u->created_at?->format('M j, Y') }}</td>
                         <td class="px-5 py-3 text-ink-muted">{{ $u->last_login_at?->diffForHumans() ?? 'Never' }}</td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
+                        <td class="px-5 py-3 text-right">
                             @if($u->id === 1)
                                 <span class="text-xs text-ink-muted">Protected</span>
                             @else
-                                <a href="{{ route('admin.users.edit', $u) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                                @can('manage-users')
-                                    <form method="POST" action="{{ route('admin.users.destroy', $u) }}" class="inline ml-3" onsubmit="return confirm('Delete this user?')">
-                                        @csrf @method('DELETE')
-                                        <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                    </form>
-                                @endcan
+                                <div class="row-actions">
+                                    <x-row-action type="edit" href="{{ route('admin.users.edit', $u) }}" />
+                                    @can('manage-users')
+                                        <form method="POST" action="{{ route('admin.users.destroy', $u) }}" onsubmit="return confirm('Delete this user?')">
+                                            @csrf @method('DELETE')
+                                            <x-row-action type="delete" />
+                                        </form>
+                                    @endcan
+                                </div>
                             @endif
                         </td>
                     </tr>

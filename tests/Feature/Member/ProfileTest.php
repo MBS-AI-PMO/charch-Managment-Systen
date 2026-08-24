@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 it('updates the profile name, phone and bio', function () {
     $u = makeMember(['name' => 'Old Name', 'email' => 'm@example.test']);
@@ -60,4 +61,58 @@ it('rejects a password change when current_password is wrong', function () {
         ])->assertSessionHasErrors('current_password');
 
     expect(Hash::check('Old-Pass-Long-1!', $u->fresh()->password))->toBeTrue();
+});
+
+it('stores a profile photo on the public disk', function () {
+    Storage::fake('public');
+    $u = makeMember(['email' => 'm@example.test']);
+    $photo = UploadedFile::fake()->image('me.jpg', 800, 600);
+
+    $this->actingAs($u, 'web')
+        ->put(route('member.profile.update'), [
+            'name' => $u->name,
+            'email' => $u->email,
+            'avatar' => $photo,
+        ])->assertRedirect();
+
+    $fresh = $u->fresh();
+    expect($fresh->avatar_path)->not->toBeNull()
+        ->and($fresh->avatar_path)->toStartWith('uploads/avatars/');
+
+    Storage::disk('public')->assertExists($fresh->avatar_path);
+});
+
+it('removes a profile photo when requested', function () {
+    Storage::fake('public');
+    Storage::disk('public')->put('uploads/avatars/old.jpg', 'fake-bytes');
+    $u = makeMember([
+        'email' => 'm@example.test',
+        'avatar_path' => 'uploads/avatars/old.jpg',
+    ]);
+
+    $this->actingAs($u, 'web')
+        ->put(route('member.profile.update'), [
+            'name' => $u->name,
+            'email' => $u->email,
+            'remove_avatar' => '1',
+        ])->assertRedirect();
+
+    expect($u->fresh()->avatar_path)->toBeNull();
+    Storage::disk('public')->assertMissing('uploads/avatars/old.jpg');
+});
+
+it('rejects a non-image file as a profile photo', function () {
+    Storage::fake('public');
+    $u = makeMember(['email' => 'm@example.test']);
+    $evil = UploadedFile::fake()->createWithContent('evil.php', '<?php echo "pwned";');
+
+    $this->actingAs($u, 'web')
+        ->from(route('member.profile.edit'))
+        ->put(route('member.profile.update'), [
+            'name' => $u->name,
+            'email' => $u->email,
+            'avatar' => $evil,
+        ])->assertSessionHasErrors('avatar');
+
+    expect($u->fresh()->avatar_path)->toBeNull();
 });

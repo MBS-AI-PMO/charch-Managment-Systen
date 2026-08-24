@@ -100,7 +100,7 @@ class CertificateController extends Controller
         return view('certificates.print', [
             'certificate' => $certificate,
             'autoPrint' => false,
-            'backUrl' => route('admin.certificates.show', $certificate),
+            'backUrl' => route('admin.certificates.index'),
             'editUrl' => route('admin.certificates.edit', $certificate),
             'pdfUrl' => route('admin.certificates.pdf', $certificate),
         ]);
@@ -111,7 +111,7 @@ class CertificateController extends Controller
         return view('certificates.print', [
             'certificate' => $certificate,
             'autoPrint' => true,
-            'backUrl' => route('admin.certificates.show', $certificate),
+            'backUrl' => route('admin.certificates.index'),
             'editUrl' => route('admin.certificates.edit', $certificate),
             'pdfUrl' => route('admin.certificates.pdf', $certificate),
         ]);

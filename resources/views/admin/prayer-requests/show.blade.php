@@ -32,7 +32,7 @@
                 <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium {{ $bg }} {{ $tx }} capitalize">{{ $p->status ?? 'pending' }}</span>
                 <form method="POST" action="{{ route('admin.prayer-requests.destroy', $p) }}" onsubmit="return confirm('Delete this prayer request?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn-ghost text-sm text-red-600">Delete</button>
+                    <x-row-action type="delete" />
                 </form>
             </div>
         </div>

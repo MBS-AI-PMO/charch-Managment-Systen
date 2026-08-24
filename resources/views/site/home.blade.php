@@ -7,6 +7,11 @@
 @php
   $heroImg = site_img($page->hero_image_path, 'home-hero-'.$page->id, 1800, 900);
   $serviceTimes = preg_split("/\r?\n/", trim((string) settings('contact.service_times', '')));
+  $welcomeImage = settings('home.welcome_image', 'uploads/yRT3rmrD_amjid-and-nazia.jpeg');
+  $welcomeEyebrow = settings('home.welcome.eyebrow', 'A word of welcome');
+  $welcomeHeading = settings('home.welcome.heading', 'However you got here, we are glad.');
+  $welcomeLede = settings('home.welcome.lede', 'Whether you are exploring faith for the first time or have walked with Christ for decades, you will find a place here.');
+  $welcomeQuote = settings('home.welcome.quote', 'Come to me, all you who are weary…');
 @endphp
 
 @section('content')
@@ -43,9 +48,9 @@
   <section class="max-w-container mx-auto px-4 py-12 md:py-16 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
     <div class="reveal-left">
       <x-site.section-heading
-        eyebrow="A word of welcome"
-        heading="However you got here, we are glad."
-        lede="Whether you are exploring faith for the first time or have walked with Christ for decades, you will find a place here."
+        :eyebrow="$welcomeEyebrow"
+        :heading="$welcomeHeading"
+        :lede="$welcomeLede"
       />
       <div class="text-ink-muted leading-relaxed prose max-w-none">
         {!! site_render_html($page->body) !!}
@@ -56,9 +61,9 @@
       </div>
     </div>
     <div class="reveal-right relative">
-      <div class="aspect-[4/5] rounded-2xl bg-cover bg-center shadow-lg tilt-on-hover" style="background-image:url('{{ site_img('uploads/yRT3rmrD_amjid-and-nazia.jpeg', 'home-welcome-'.$page->id, 700, 900) }}')"></div>
+      <div class="aspect-[4/5] rounded-2xl bg-cover bg-center shadow-lg tilt-on-hover" style="background-image:url('{{ site_img($welcomeImage, 'home-welcome-'.$page->id, 700, 900) }}')"></div>
       <div class="float-quote absolute -bottom-6 -left-6 hidden md:block bg-brand-secondary text-ink rounded-xl px-6 py-4 shadow-lg font-serif text-lg max-w-xs">
-        &ldquo;Come to me, all you who are weary&hellip;&rdquo;
+        &ldquo;{{ $welcomeQuote }}&rdquo;
       </div>
     </div>
   </section>

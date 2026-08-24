@@ -17,12 +17,12 @@ class PrayerRequestController extends Controller
     {
         $mine = PrayerRequest::where('user_id', $req->user()->id)
             ->latest()
-            ->get();
+            ->paginate(10, ['*'], 'mine_page');
 
         $community = PrayerRequest::public()
             ->where('user_id', '!=', $req->user()->id)
             ->latest()
-            ->paginate(12);
+            ->paginate(10, ['*'], 'community_page');
 
         return view('member.prayer.index', compact('mine', 'community'));
     }

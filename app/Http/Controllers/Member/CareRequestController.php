@@ -17,7 +17,7 @@ class CareRequestController extends Controller
     {
         $items = CareRequest::where('user_id', $req->user()->id)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('member.care.index', compact('items'));
     }

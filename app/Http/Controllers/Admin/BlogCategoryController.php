@@ -9,7 +9,7 @@ class BlogCategoryController extends Controller
 {
     public function index()
     {
-        $categories = BlogCategory::orderBy('name')->paginate(30);
+        $categories = BlogCategory::orderBy('name')->paginate(10);
         return view('admin.blog.categories.index', compact('categories'));
     }
 

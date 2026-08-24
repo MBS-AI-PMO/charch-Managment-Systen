@@ -33,7 +33,7 @@ class CertificateController extends Controller
         return view('certificates.print', [
             'certificate' => $certificate,
             'autoPrint' => false,
-            'backUrl' => route('member.certificates.show', $certificate),
+            'backUrl' => route('member.certificates.index'),
             'editUrl' => null,
             'pdfUrl' => route('member.certificates.pdf', $certificate),
         ]);
@@ -46,7 +46,7 @@ class CertificateController extends Controller
         return view('certificates.print', [
             'certificate' => $certificate,
             'autoPrint' => true,
-            'backUrl' => route('member.certificates.show', $certificate),
+            'backUrl' => route('member.certificates.index'),
             'editUrl' => null,
             'pdfUrl' => route('member.certificates.pdf', $certificate),
         ]);

@@ -11,6 +11,13 @@
                 Click the link in the email to finish creating your account.
             </p>
 
+            @if (session('success'))
+                <div class="mt-4 bg-green-50 text-green-800 border border-green-200 p-3 rounded text-sm text-left">{{ session('success') }}</div>
+            @endif
+            @if ($errors->any())
+                <div class="mt-4 bg-red-50 text-red-700 border border-red-200 p-3 rounded text-sm text-left">{{ $errors->first() }}</div>
+            @endif
+
             <div class="mt-6 flex flex-wrap gap-2 justify-center">
                 <form method="POST" action="{{ route('verification.send') }}">
                     @csrf

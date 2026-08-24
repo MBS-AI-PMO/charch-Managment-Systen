@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BlogPost;
+use App\Models\ChurchBranch;
 use App\Models\Event;
 use App\Models\Ministry;
 use App\Models\Page;
@@ -31,8 +32,54 @@ it('renders the about page', function () {
 
 it('renders the our churches page', function () {
     Page::factory()->create(['slug' => 'our-churches']);
+    ChurchBranch::create([
+        'slug' => 'aog-church-zafar-town',
+        'name' => 'AOG Church Zafar Town',
+        'city' => 'Zafar Town, Lahore',
+        'role' => 'Main campus',
+        'is_published' => true,
+        'sort_order' => 1,
+    ]);
+    ChurchBranch::create([
+        'slug' => 'aog-church-razzaq-town',
+        'name' => 'AOG Church Razzaq Town',
+        'city' => 'Razzaq Town',
+        'role' => 'Branch',
+        'is_published' => true,
+        'sort_order' => 2,
+    ]);
 
-    $this->get('/our-churches')->assertOk()->assertSee('Our Churches');
+    $this->get('/our-churches')
+        ->assertOk()
+        ->assertSee('Our Churches')
+        ->assertSee('AOG Church Zafar Town')
+        ->assertSee('AOG Church Razzaq Town');
+});
+
+it('renders a church detail page', function () {
+    Page::factory()->create(['slug' => 'our-churches']);
+    ChurchBranch::create([
+        'slug' => 'aog-church-zafar-town',
+        'name' => 'AOG Church Zafar Town',
+        'address' => 'Street 4, Zafar Town, Lahore',
+        'is_published' => true,
+        'sort_order' => 1,
+    ]);
+    ChurchBranch::create([
+        'slug' => 'aog-church-razzaq-town',
+        'name' => 'AOG Church Razzaq Town',
+        'is_published' => true,
+        'sort_order' => 2,
+    ]);
+
+    $this->get('/our-churches/aog-church-zafar-town')
+        ->assertOk()
+        ->assertSee('AOG Church Zafar Town')
+        ->assertSee('Street 4, Zafar Town, Lahore');
+
+    $this->get('/our-churches/aog-church-razzaq-town')
+        ->assertOk()
+        ->assertSee('AOG Church Razzaq Town');
 });
 
 it('renders the sermons index', function () {

@@ -48,44 +48,45 @@
 
       <div class="churches-grid mt-8 md:mt-10">
         @foreach($branches as $i => $branch)
-          <article class="church-card reveal delay-{{ ($i % 3) + 1 }}">
+          <a class="church-card reveal delay-{{ ($i % 3) + 1 }}" href="{{ route('site.churches.show', $branch) }}">
             <div class="church-card-top">
-              <span class="church-card-role">{{ $branch['role'] }}</span>
-              <h3 class="church-card-name">{{ $branch['name'] }}</h3>
-              <p class="church-card-city">{{ $branch['city'] }}</p>
+              <span class="church-card-role">{{ $branch->role }}</span>
+              <h3 class="church-card-name">{{ $branch->name }}</h3>
+              <p class="church-card-city">{{ $branch->city }}</p>
             </div>
 
-            @if(!empty($branch['note']))
-              <p class="church-card-note">{{ $branch['note'] }}</p>
+            @if($branch->note)
+              <p class="church-card-note">{{ $branch->note }}</p>
             @endif
 
             <ul class="church-card-meta">
-              @if(!empty($branch['address']))
+              @if($branch->address)
                 <li>
                   <span class="church-card-meta-label">Address</span>
-                  <span>{{ $branch['address'] }}</span>
+                  <span>{{ $branch->address }}</span>
                 </li>
               @endif
-              @if(!empty($branch['services']))
+              @if($branch->services)
                 <li>
                   <span class="church-card-meta-label">Services</span>
-                  <span class="whitespace-pre-line">{{ $branch['services'] }}</span>
+                  <span class="whitespace-pre-line">{{ $branch->services }}</span>
                 </li>
               @endif
-              @if(!empty($branch['phone']))
+              @if($branch->displayPhone())
                 <li>
                   <span class="church-card-meta-label">Phone</span>
-                  <a href="tel:{{ preg_replace('/\s+/', '', $branch['phone']) }}">{{ $branch['phone'] }}</a>
+                  <span class="church-card-accent">{{ $branch->displayPhone() }}</span>
                 </li>
               @endif
-              @if(!empty($branch['email']))
+              @if($branch->displayEmail())
                 <li>
                   <span class="church-card-meta-label">Email</span>
-                  <a href="mailto:{{ $branch['email'] }}">{{ $branch['email'] }}</a>
+                  <span class="church-card-accent">{{ $branch->displayEmail() }}</span>
                 </li>
               @endif
             </ul>
-          </article>
+            <span class="church-card-cta">View church details →</span>
+          </a>
         @endforeach
       </div>
     </div>

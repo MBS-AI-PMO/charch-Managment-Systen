@@ -31,7 +31,7 @@ class TitheController extends Controller
         }
 
         return view('admin.tithes.index', [
-            'tithes' => $q->paginate(25)->withQueryString(),
+            'tithes' => $q->paginate(10)->withQueryString(),
             'funds' => TitheFund::active()->get(),
             'filters' => $request->only(['fund', 'method', 'q']),
         ]);

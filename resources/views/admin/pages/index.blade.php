@@ -39,7 +39,9 @@
                         </td>
                         <td class="px-5 py-3 text-ink-muted">{{ $p->updated_at?->diffForHumans() }}</td>
                         <td class="px-5 py-3 text-right">
-                            <a href="{{ route('admin.pages.edit', $p) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.pages.edit', $p) }}" />
+                            </div>
                         </td>
                     </tr>
                 @empty

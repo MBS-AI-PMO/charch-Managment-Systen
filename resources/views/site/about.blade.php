@@ -6,7 +6,7 @@
 
 @php
   $heroImg = site_img($page->hero_image_path, 'about-hero-'.$page->id, 1800, 700);
-  $storyImg = site_img('uploads/pages/yp0EeGYMexBpkizJSy5KhUkpwljsA5xXk51ZQABI.jpg', 'about-story-'.$page->id, 1400, 900);
+  $storyImg = site_img(settings('about.story_image', 'uploads/pages/yp0EeGYMexBpkizJSy5KhUkpwljsA5xXk51ZQABI.jpg'), 'about-story-'.$page->id, 1400, 900);
   $brand = settings('brand.name', 'Assemblies of God');
   $tagline = settings('brand.tagline');
 
