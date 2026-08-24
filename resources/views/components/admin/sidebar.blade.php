@@ -53,7 +53,7 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
         </div>
     </div>
 
-    <nav class="admin-sidebar-nav flex-1 overflow-y-scroll overflow-x-hidden py-2">
+    <nav class="admin-sidebar-nav flex-1 overflow-y-auto overflow-x-hidden py-2">
         @foreach($adminVisibleLinks as $l)
             <a
                 href="{{ Route::has($l['route']) ? route($l['route']) : '#' }}"
