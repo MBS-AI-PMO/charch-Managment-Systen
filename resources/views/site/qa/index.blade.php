@@ -1,14 +1,16 @@
 @extends('layouts.site')
 
-@section('title', 'Q&A'.settings('seo.default_title_suffix', ''))
+@section('title', ($page?->meta_title) ?: ('Q&A'.settings('seo.default_title_suffix', '')))
+
+@include('site._meta')
 
 @section('content')
   <x-site.header :nav="$siteNav" />
 
   <x-site.hero
     eyebrow="Questions &amp; answers"
-    heading="What people asked — and how we answered."
-    sub="A public history of questions from our community. Only names, questions, and answers are shown."
+    :heading="$page?->hero_heading ?: 'What people asked — and how we answered.'"
+    :sub="$page?->hero_subheading ?: 'A public history of questions from our community. Only names, questions, and answers are shown.'"
     size="sm"
   />
 

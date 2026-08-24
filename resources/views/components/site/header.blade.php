@@ -4,6 +4,8 @@
   $contactUrl = \Illuminate\Support\Facades\Route::has('site.contact') ? route('site.contact') : (\Illuminate\Support\Facades\Route::has('preview.contact') ? route('preview.contact') : url('/contact'));
   $donateUrl = \Illuminate\Support\Facades\Route::has('site.donate') ? route('site.donate') : null;
   $donateLabel = function_exists('settings') ? settings('donate.button_label', 'Donate') : 'Donate';
+  $visitCtaLabel = function_exists('settings') ? settings('header.visit_cta_label', 'Plan your visit') : 'Plan your visit';
+  $visitCtaUrl = function_exists('settings') ? settings('header.visit_cta_url', $contactUrl) : $contactUrl;
   $brand = $brandName ?? (function_exists('settings') ? settings('brand.name', 'Assemblies of God') : 'Assemblies of God');
   $tagline = $brandTagline ?? (function_exists('settings') ? settings('brand.tagline', 'Rawalpindi') : 'Rawalpindi');
   $member = auth('web')->user();
@@ -134,9 +136,21 @@
       ->all();
 @endphp
 <header
-  x-data="{open:false}"
+  x-data="{
+    open: false,
+    syncNavLock() {
+      const lock = this.open && window.matchMedia('(max-width: 1279px)').matches;
+      document.documentElement.classList.toggle('overflow-hidden', lock);
+    }
+  }"
+  x-init="
+    $watch('open', () => syncNavLock());
+    window.addEventListener('resize', () => {
+      if (window.matchMedia('(min-width: 1280px)').matches) open = false;
+      syncNavLock();
+    });
+  "
   @keydown.escape.window="open=false"
-  @click.away="open=false"
   class="site-header sticky top-0 z-40"
 >
   <div class="site-header-accent" aria-hidden="true"></div>
@@ -244,8 +258,8 @@
         <a href="{{ $donateUrl }}" class="site-header-cta-ghost">{{ $donateLabel }}</a>
       @endif
 
-      <a href="{{ $contactUrl }}" class="site-header-cta-primary shine-btn glow-primary">
-        <span>Plan your visit</span>
+      <a href="{{ $visitCtaUrl ?: $contactUrl }}" class="site-header-cta-primary shine-btn glow-primary">
+        <span>{{ $visitCtaLabel }}</span>
       </a>
     </div>
 
@@ -266,64 +280,110 @@
     </button>
   </div>
 
-  <div
-    id="site-mobile-nav"
-    x-show="open"
-    x-cloak
-    x-transition:enter="transition ease-out duration-150"
-    x-transition:enter-start="opacity-0 -translate-y-1"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-100"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-1"
-    class="xl:hidden border-t border-[rgb(var(--border))] bg-surface/98 backdrop-blur"
-  >
-    <div class="w-full px-4 sm:px-6 py-4 max-h-[min(70vh,28rem)] overflow-y-auto overscroll-contain">
-      <nav class="site-mobile-nav-grid" aria-label="Mobile">
-        @forelse($navItems as $item)
-          @php $children = $item['children'] ?? []; @endphp
-          @if(!empty($children))
-            <details class="site-mobile-nav-details site-mobile-nav-span">
-              <summary class="site-mobile-nav-summary site-mobile-nav-chip">
-                <span>{{ $item['label'] }}</span>
-                <svg class="site-mobile-nav-chevron h-3.5 w-3.5 shrink-0 text-ink-muted transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </summary>
-              <div class="site-mobile-nav-sub">
-                @if(!empty($item['url']) && $item['url'] !== '#')
-                  <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $item['label'] }}</a>
-                @endif
-                @foreach($children as $child)
-                  <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $child['label'] }}</a>
-                @endforeach
-              </div>
-            </details>
-          @else
-            <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-chip">{{ $item['label'] }}</a>
-          @endif
-        @empty
-          <p class="col-span-2 py-3 text-sm text-ink-muted">No menu items yet.</p>
-        @endforelse
+  {{-- Mobile side drawer (teleported so header backdrop-filter doesn't trap fixed positioning) --}}
+  <template x-teleport="body">
+    <div class="xl:hidden">
+      <div
+        x-show="open"
+        x-cloak
+        x-transition:enter="transition-opacity ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="site-mobile-nav-backdrop"
+        @click="open=false"
+        aria-hidden="true"
+      ></div>
 
-        @if($member && $dashboardUrl)
-          <a href="{{ $dashboardUrl }}" @click="open=false" class="site-mobile-nav-chip">My account</a>
-          @if($logoutUrl)
-            <form method="POST" action="{{ $logoutUrl }}">@csrf
-              <button type="submit" class="site-mobile-nav-chip w-full text-left">Sign out</button>
-            </form>
-          @endif
-        @elseif($loginUrl)
-          <a href="{{ $loginUrl }}" @click="open=false" class="site-mobile-nav-chip">Sign in</a>
-        @endif
-      </nav>
+      <div
+        id="site-mobile-nav"
+        x-show="open"
+        x-cloak
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full"
+        class="site-mobile-nav-drawer"
+      >
+        <div class="site-mobile-nav-drawer-head">
+          <a href="{{ $homeUrl }}" @click="open=false" class="site-mobile-nav-drawer-brand" aria-label="{{ $brand }} — Home">
+            @if($brandLogoUrl ?? null)
+              <img src="{{ $brandLogoUrl }}" alt="" class="h-9 w-auto max-w-[64px] object-contain shrink-0">
+            @endif
+            <span class="leading-tight min-w-0">
+              <span class="block font-serif text-sm font-semibold tracking-tight text-ink truncate">{{ $brand }}</span>
+              @if($tagline)
+                <span class="block text-[0.65rem] tracking-[0.12em] uppercase text-ink-muted mt-0.5 truncate">{{ $tagline }}</span>
+              @endif
+            </span>
+          </a>
+          <button
+            type="button"
+            @click="open=false"
+            class="site-mobile-nav-drawer-close"
+            aria-label="Close menu"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
 
-      <div class="mt-4 flex flex-col gap-2 border-t border-[rgb(var(--border))] pt-4">
-        @if($donateUrl)
-          <a href="{{ $donateUrl }}" @click="open=false" class="btn-ghost w-full text-sm justify-center">{{ $donateLabel }}</a>
-        @endif
-        <a href="{{ $contactUrl }}" @click="open=false" class="btn-primary shine-btn glow-primary w-full text-sm justify-center"><span>Plan your visit</span></a>
+        <div class="site-mobile-nav-drawer-body">
+          <nav class="site-mobile-nav-grid" aria-label="Mobile">
+            @forelse($navItems as $item)
+              @php $children = $item['children'] ?? []; @endphp
+              @if(!empty($children))
+                <details class="site-mobile-nav-details site-mobile-nav-span">
+                  <summary class="site-mobile-nav-summary site-mobile-nav-chip">
+                    <span>{{ $item['label'] }}</span>
+                    <svg class="site-mobile-nav-chevron h-3.5 w-3.5 shrink-0 text-ink-muted transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  </summary>
+                  <div class="site-mobile-nav-sub">
+                    @if(!empty($item['url']) && $item['url'] !== '#')
+                      <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $item['label'] }}</a>
+                    @endif
+                    @foreach($children as $child)
+                      <a href="{{ $child['url'] }}" target="{{ $child['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-sub-link">{{ $child['label'] }}</a>
+                    @endforeach
+                  </div>
+                </details>
+              @else
+                <a href="{{ $item['url'] }}" target="{{ $item['target'] ?? '_self' }}" @click="open=false" class="site-mobile-nav-chip">{{ $item['label'] }}</a>
+              @endif
+            @empty
+              <p class="col-span-2 py-3 text-sm text-ink-muted">No menu items yet.</p>
+            @endforelse
+
+            @if($member && $dashboardUrl)
+              <a href="{{ $dashboardUrl }}" @click="open=false" class="site-mobile-nav-chip">My account</a>
+              @if($logoutUrl)
+                <form method="POST" action="{{ $logoutUrl }}">@csrf
+                  <button type="submit" class="site-mobile-nav-chip w-full text-left">Sign out</button>
+                </form>
+              @endif
+            @elseif($loginUrl)
+              <a href="{{ $loginUrl }}" @click="open=false" class="site-mobile-nav-chip">Sign in</a>
+            @endif
+          </nav>
+        </div>
+
+        <div class="site-mobile-nav-drawer-foot">
+          @if($donateUrl)
+            <a href="{{ $donateUrl }}" @click="open=false" class="btn-ghost w-full text-sm justify-center">{{ $donateLabel }}</a>
+          @endif
+          <a href="{{ $visitCtaUrl ?: $contactUrl }}" @click="open=false" class="btn-primary shine-btn glow-primary w-full text-sm justify-center"><span>{{ $visitCtaLabel }}</span></a>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
 
   <x-site.ask-question />
 </header>

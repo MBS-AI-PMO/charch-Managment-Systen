@@ -16,7 +16,7 @@ class SermonController extends Controller
         if ($s = $req->query('search')) $q->where('title', 'like', "%$s%");
         if ($series = $req->query('series_id')) $q->where('series_id', $series);
         if ($speaker = $req->query('speaker_id')) $q->where('speaker_id', $speaker);
-        $sermons = $q->latest('preached_on')->paginate(20)->withQueryString();
+        $sermons = $q->latest('preached_on')->paginate(10)->withQueryString();
         $series = SermonSeries::orderBy('name')->get();
         $speakers = SermonSpeaker::orderBy('name')->get();
         return view('admin.sermons.index', compact('sermons', 'series', 'speakers'));

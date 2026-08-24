@@ -14,11 +14,13 @@ abstract class BrandedMail extends Mailable implements ShouldQueue
     public function envelope(): \Illuminate\Mail\Mailables\Envelope
     {
         $brandName = settings('brand.name', config('app.name', 'Our Church'));
-        $fromEmail = settings('contact.email') ?: config('mail.from.address');
+        $fromEmail = config('mail.from.address');
+        $replyTo = config('mail.reply_to.address')
+            ?: (settings('contact.email') ?: $fromEmail);
 
         return new \Illuminate\Mail\Mailables\Envelope(
             from: new \Illuminate\Mail\Mailables\Address($fromEmail, $brandName),
-            replyTo: [new \Illuminate\Mail\Mailables\Address($fromEmail, $brandName)],
+            replyTo: [new \Illuminate\Mail\Mailables\Address($replyTo, $brandName)],
             subject: $this->subjectLine(),
         );
     }

@@ -38,7 +38,7 @@ class MessageController extends Controller
             });
         }
 
-        $messages = $q->latest()->paginate(25)->withQueryString();
+        $messages = $q->latest()->paginate(10)->withQueryString();
         $unreadCount = ContactMessage::whereNull('read_at')->count();
         $awaitingCount = ContactMessage::whereNull('replied_at')->count();
 

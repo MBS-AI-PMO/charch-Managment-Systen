@@ -48,11 +48,13 @@
                         <td class="py-2 px-3">{{ ucfirst(str_replace('_', ' ', $t->method)) }}</td>
                         <td class="py-2 px-3 text-right font-mono">{{ formatMoney($t->amount_cents) }}</td>
                         <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.tithes.edit', $t) }}" class="text-brand-primary text-xs">edit</a>
-                            <form method="POST" action="{{ route('admin.tithes.destroy', $t) }}" class="inline" onsubmit="return confirm('Delete this gift record?')">
-                                @csrf @method('DELETE')
-                                <button class="text-red-600 text-xs ml-2">delete</button>
-                            </form>
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.tithes.edit', $t) }}" />
+                                <form method="POST" action="{{ route('admin.tithes.destroy', $t) }}" onsubmit="return confirm('Delete this gift record?')">
+                                    @csrf @method('DELETE')
+                                    <x-row-action type="delete" />
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

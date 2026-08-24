@@ -15,7 +15,7 @@ class FeedController extends Controller
         $posts = FeedPost::with('author')
             ->withCount('reactions')
             ->latest('published_at')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('admin.feed.index', compact('posts'));
     }

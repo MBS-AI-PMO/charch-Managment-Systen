@@ -23,9 +23,17 @@ class PasswordResetController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::broker('admins')->sendResetLink(
-            ['email' => $request->email, 'is_admin' => true]
-        );
+        try {
+            $status = Password::broker('admins')->sendResetLink(
+                ['email' => $request->email, 'is_admin' => true]
+            );
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withInput($request->only('email'))->withErrors([
+                'email' => 'Mail server rejected the message. Check SMTP username/password in .env (use aamir@aogchurch.pk, not the host name).',
+            ]);
+        }
 
         return $status === Password::ResetLinkSent
             ? back()->with('status', __($status))
@@ -89,9 +97,17 @@ class PasswordResetController extends Controller
                 ]);
         }
 
-        $status = Password::broker('users')->sendResetLink(
-            ['email' => $request->email]
-        );
+        try {
+            $status = Password::broker('users')->sendResetLink(
+                ['email' => $request->email]
+            );
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withInput($request->only('email'))->withErrors([
+                'email' => 'Mail server rejected the message. Check SMTP username/password in .env (use aamir@aogchurch.pk, not the host name).',
+            ]);
+        }
 
         return $status === Password::ResetLinkSent
             ? back()->with('status', __($status))

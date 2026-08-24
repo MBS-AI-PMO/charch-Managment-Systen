@@ -23,15 +23,20 @@
                         <td class="py-2 px-3">{{ $f->is_active ? 'Active' : 'Inactive' }}</td>
                         <td class="py-2 px-3">{{ $f->sort_order }}</td>
                         <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.tithes.funds.edit', $f) }}" class="text-brand-primary text-xs">edit</a>
-                            <form method="POST" action="{{ route('admin.tithes.funds.destroy', $f) }}" class="inline" onsubmit="return confirm('Delete or deactivate fund?')">
-                                @csrf @method('DELETE')
-                                <button class="text-red-600 text-xs ml-2">delete</button>
-                            </form>
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.tithes.funds.edit', $f) }}" />
+                                <form method="POST" action="{{ route('admin.tithes.funds.destroy', $f) }}" onsubmit="return confirm('Delete or deactivate fund?')">
+                                    @csrf @method('DELETE')
+                                    <x-row-action type="delete" />
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    @if($funds->hasPages())
+        <div class="mt-4">{{ $funds->links() }}</div>
+    @endif
 </x-admin.layout>

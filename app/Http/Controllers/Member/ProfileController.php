@@ -27,10 +27,17 @@ class ProfileController extends Controller
         }
 
         $data = $request->validated();
+        unset($data['avatar'], $data['remove_avatar']);
         $user = $request->user();
 
         if ($data['email'] !== $user->email) {
             $user->email_verified_at = null;
+        }
+
+        if ($request->hasFile('avatar')) {
+            $user->replaceAvatar($request->file('avatar'));
+        } elseif ($request->boolean('remove_avatar')) {
+            $user->clearAvatar();
         }
 
         $user->fill($data)->save();

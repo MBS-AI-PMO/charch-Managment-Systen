@@ -13,7 +13,7 @@
     ];
 @endphp
 <x-member.layout title="Knock for help">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div class="max-w-2xl">
                 <h1 class="font-serif text-3xl md:text-4xl">Knock for help</h1>
@@ -49,8 +49,10 @@
                                     <span class="inline-flex px-2 py-0.5 rounded-full text-xs {{ $sb }} capitalize">{{ $r->status }}</span>
                                 </td>
                                 <td class="px-4 py-3 text-ink-muted whitespace-nowrap">{{ $r->created_at?->diffForHumans() }}</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <a href="{{ route('member.care.show', $r) }}" class="text-xs text-brand-primary hover:underline">View</a>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="row-actions">
+                                        <x-row-action type="view" href="{{ route('member.care.show', $r) }}" />
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -63,6 +65,9 @@
                     </tbody>
                 </table>
             </div>
+            @if($items->hasPages())
+                <div class="px-4 py-3 border-t border-[rgb(var(--border))]">{{ $items->links() }}</div>
+            @endif
         </div>
     </div>
 </x-member.layout>

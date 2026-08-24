@@ -15,7 +15,7 @@
     $sb = $statusBadge[$care->status] ?? $statusBadge['open'];
 @endphp
 <x-member.layout title="Care request">
-    <div class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div class="text-xs text-ink-muted">
             <a href="{{ route('member.care.index') }}" class="hover:text-brand-primary">&larr; Back to Knock for help</a>
         </div>

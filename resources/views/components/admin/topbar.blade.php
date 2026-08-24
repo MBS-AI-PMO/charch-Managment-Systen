@@ -40,7 +40,7 @@ $adminBrand = settings('brand.name', 'Assemblies of God');
 $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
 @endphp
 
-{{-- Site-style sticky header: bar + dropdown mobile nav (not a side drawer) --}}
+{{-- Site-style sticky header + mobile side drawer --}}
 <header
     class="admin-topbar sticky top-0 z-40 bg-white border-b border-[rgb(var(--border))]"
     @keydown.escape.window="sidebar=false"
@@ -125,52 +125,95 @@ $adminTagline = settings('brand.tagline', 'Rawalpindi') ?: 'Rawalpindi';
         </div>
     </div>
 
-    {{-- Mobile dropdown under header (website-style chip grid) --}}
-    <div
-        id="admin-mobile-nav"
-        x-show="sidebar"
-        x-cloak
-        x-transition:enter="transition ease-out duration-150"
-        x-transition:enter-start="opacity-0 -translate-y-1"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-100"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-1"
-        class="lg:hidden border-t border-[rgb(var(--border))] bg-surface/98 backdrop-blur"
-    >
-        <div class="px-3 sm:px-4 py-4 max-h-[min(70vh,28rem)] overflow-y-auto overscroll-contain">
-            <nav class="site-mobile-nav-grid" aria-label="Admin mobile">
-                @foreach($adminVisibleLinks as $l)
-                    <a
-                        href="{{ Route::has($l['route']) ? route($l['route']) : '#' }}"
-                        @click="sidebar=false"
-                        @class([
-                            'site-mobile-nav-chip',
-                            'border-brand-primary/25 bg-brand-primary/5 text-brand-primary' => $adminNavIsActive($l['route']),
-                        ])
-                    >
-                        <span class="truncate">{{ $l['label'] }}</span>
-                        @if(!empty($l['badge']))
-                            <span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-black/5 text-ink-muted">{{ $l['badge'] }}</span>
-                        @endif
-                    </a>
-                @endforeach
-            </nav>
+    {{-- Mobile side drawer --}}
+    <template x-teleport="body">
+        <div class="lg:hidden">
+            <div
+                x-show="sidebar"
+                x-cloak
+                x-transition:enter="transition-opacity ease-out duration-200"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity ease-in duration-150"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="site-mobile-nav-backdrop"
+                @click="sidebar=false"
+                aria-hidden="true"
+            ></div>
 
-            <div class="mt-4 flex flex-col gap-2 border-t border-[rgb(var(--border))] pt-4">
-                <div class="flex items-center gap-2.5 px-1">
-                    <div class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-[11px] font-semibold shrink-0">{{ $initials }}</div>
-                    <div class="leading-tight min-w-0 overflow-hidden flex-1">
-                        <div class="text-ink text-[13px] font-medium truncate">{{ $user?->name ?? 'Admin' }}</div>
-                        <div class="text-[11px] text-ink-muted truncate">{{ $user?->roles?->first()?->name ?? 'Administrator' }}</div>
-                    </div>
+            <div
+                id="admin-mobile-nav"
+                x-show="sidebar"
+                x-cloak
+                role="dialog"
+                aria-modal="true"
+                aria-label="Admin menu"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full"
+                class="site-mobile-nav-drawer"
+            >
+                <div class="site-mobile-nav-drawer-head">
+                    <a href="{{ route('admin.dashboard') }}" @click="sidebar=false" class="site-mobile-nav-drawer-brand" aria-label="{{ $adminBrand }} — Dashboard">
+                        @if($brandLogoUrl ?? null)
+                            <img src="{{ $brandLogoUrl }}" alt="" class="h-9 w-auto max-w-[64px] object-contain shrink-0">
+                        @endif
+                        <span class="leading-tight min-w-0">
+                            <span class="block font-serif text-sm font-semibold tracking-tight text-ink truncate">{{ $adminBrand }}</span>
+                            <span class="block text-[0.65rem] tracking-[0.12em] uppercase text-ink-muted mt-0.5 truncate">{{ $adminTagline }}</span>
+                        </span>
+                    </a>
+                    <button
+                        type="button"
+                        @click="sidebar=false"
+                        class="site-mobile-nav-drawer-close"
+                        aria-label="Close menu"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
-                <a href="{{ route('site.home') }}" target="_blank" rel="noopener" @click="sidebar=false" class="site-mobile-nav-chip">View site</a>
-                <form method="POST" action="{{ route('admin.logout') }}">
-                    @csrf
-                    <button type="submit" class="site-mobile-nav-chip w-full text-left text-brand-primary">Sign out</button>
-                </form>
+
+                <div class="site-mobile-nav-drawer-body">
+                    <nav class="site-mobile-nav-grid" aria-label="Admin mobile">
+                        @foreach($adminVisibleLinks as $l)
+                            <a
+                                href="{{ Route::has($l['route']) ? route($l['route']) : '#' }}"
+                                @click="sidebar=false"
+                                @class([
+                                    'site-mobile-nav-chip',
+                                    'border-brand-primary/25 bg-brand-primary/5 text-brand-primary' => $adminNavIsActive($l['route']),
+                                ])
+                            >
+                                <span class="truncate">{{ $l['label'] }}</span>
+                                @if(!empty($l['badge']))
+                                    <span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-black/5 text-ink-muted">{{ $l['badge'] }}</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </nav>
+                </div>
+
+                <div class="site-mobile-nav-drawer-foot">
+                    <div class="flex items-center gap-2.5 px-1 mb-1">
+                        <div class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-[11px] font-semibold shrink-0">{{ $initials }}</div>
+                        <div class="leading-tight min-w-0 overflow-hidden flex-1">
+                            <div class="text-ink text-[13px] font-medium truncate">{{ $user?->name ?? 'Admin' }}</div>
+                            <div class="text-[11px] text-ink-muted truncate">{{ $user?->roles?->first()?->name ?? 'Administrator' }}</div>
+                        </div>
+                    </div>
+                    <a href="{{ route('site.home') }}" target="_blank" rel="noopener" @click="sidebar=false" class="site-mobile-nav-chip">View site</a>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit" class="site-mobile-nav-chip w-full text-left text-brand-primary">Sign out</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    </template>
 </header>

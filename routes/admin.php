@@ -3,9 +3,11 @@
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\CertificateController;
+use App\Http\Controllers\Admin\ChurchBranchController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaFolderController;
 use App\Http\Controllers\Admin\MenuController;
@@ -38,6 +40,14 @@ Route::middleware(['auth:admin', 'admin'])
 
         Route::resource('pages', PageController::class)
             ->except(['create', 'destroy'])
+            ->middleware('permission:manage-pages');
+
+        Route::resource('churches', ChurchBranchController::class)
+            ->parameters(['churches' => 'church'])
+            ->middleware('permission:manage-pages');
+
+        Route::resource('hero-slides', HeroSlideController::class)
+            ->parameters(['hero-slides' => 'hero_slide'])
             ->middleware('permission:manage-pages');
 
         Route::resource('blog/categories', BlogCategoryController::class)

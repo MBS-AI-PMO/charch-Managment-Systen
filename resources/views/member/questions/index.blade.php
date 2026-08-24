@@ -1,5 +1,5 @@
 <x-member.layout title="My questions">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div class="max-w-2xl">
                 <h1 class="font-serif text-3xl md:text-4xl">My questions</h1>
@@ -35,8 +35,10 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-ink-muted whitespace-nowrap">{{ $q->created_at?->diffForHumans() }}</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <a href="{{ route('member.questions.show', $q) }}" class="text-xs text-brand-primary hover:underline">View</a>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="row-actions">
+                                        <x-row-action type="view" href="{{ route('member.questions.show', $q) }}" />
+                                    </div>
                                 </td>
                             </tr>
                         @empty

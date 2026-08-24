@@ -86,7 +86,7 @@
                 </div>
             @endif
 
-            <main class="flex-1 p-4 lg:p-8">
+            <main class="flex-1 p-4 lg:p-8 min-w-0 max-w-full">
                 {{ $slot }}
             </main>
             <footer class="px-6 py-4 text-xs text-ink-muted border-t border-[rgb(var(--border))] bg-white/40">

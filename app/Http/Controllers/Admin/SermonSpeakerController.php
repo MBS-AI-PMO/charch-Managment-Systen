@@ -9,7 +9,7 @@ class SermonSpeakerController extends Controller
 {
     public function index()
     {
-        $speakers = SermonSpeaker::withCount('sermons')->orderBy('name')->paginate(30);
+        $speakers = SermonSpeaker::withCount('sermons')->orderBy('name')->paginate(10);
         return view('admin.sermons.speakers.index', compact('speakers'));
     }
 

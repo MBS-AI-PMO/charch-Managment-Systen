@@ -10,7 +10,7 @@ class MinistryController extends Controller
 {
     public function index()
     {
-        $ministries = Ministry::orderBy('sort_order')->orderBy('name')->get();
+        $ministries = Ministry::orderBy('sort_order')->orderBy('name')->paginate(10);
         return view('admin.ministries.index', compact('ministries'));
     }
 

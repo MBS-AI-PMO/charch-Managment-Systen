@@ -1,12 +1,11 @@
 <x-member.layout title="Community Feed">
-    <div class="max-w-2xl mx-auto px-4 py-10">
-        <div class="mb-6 flex items-end justify-between">
-            <div>
-                <h1 class="font-serif text-3xl">Community Feed</h1>
-                <p class="text-sm text-ink-muted mt-1">Latest from your church family.</p>
-            </div>
+    <div class="member-shell">
+        <div class="mb-6">
+            <h1 class="font-serif text-3xl">Community Feed</h1>
+            <p class="text-sm text-ink-muted mt-1">Latest from your church family.</p>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         @forelse($posts as $post)
             @php
                 $counts = $post->reactionCountsByKind();
@@ -16,8 +15,9 @@
                     ->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))
                     ->take(2)
                     ->join('');
+                $authorAvatar = $post->author?->avatarUrl();
             @endphp
-            <article class="card p-6 mb-6">
+            <article class="card p-6 {{ $post->pinned ? 'lg:col-span-2' : '' }}">
                 @if($post->pinned)
                     <div class="inline-flex items-center gap-1 text-xs text-brand-primary font-medium mb-3">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 9 9H4l4 3-1.5 7L12 15l5.5 4L16 12l4-3h-5z"/></svg>
@@ -26,9 +26,13 @@
                 @endif
 
                 <header class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center text-sm font-semibold">{{ $initials ?: 'CH' }}</div>
-                    <div>
-                        <div class="font-medium">{{ $authorName }}</div>
+                    @if($authorAvatar)
+                        <img src="{{ $authorAvatar }}" alt="" class="w-10 h-10 rounded-full object-cover shrink-0">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center text-sm font-semibold shrink-0">{{ $initials ?: 'CH' }}</div>
+                    @endif
+                    <div class="min-w-0">
+                        <div class="font-medium truncate">{{ $authorName }}</div>
                         <div class="text-xs text-ink-muted">{{ $post->published_at?->diffForHumans() }}</div>
                     </div>
                 </header>
@@ -61,11 +65,12 @@
                 </div>
             </article>
         @empty
-            <div class="card p-10 text-center text-ink-muted">
+            <div class="card p-10 text-center text-ink-muted lg:col-span-2">
                 <p class="text-base">The feed is quiet right now.</p>
                 <p class="text-sm mt-1">Check back later for updates from the team.</p>
             </div>
         @endforelse
+        </div>
 
         @if($posts->hasPages())
             <div class="mt-8">{{ $posts->links() }}</div>

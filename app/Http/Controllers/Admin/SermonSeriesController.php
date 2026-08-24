@@ -9,7 +9,7 @@ class SermonSeriesController extends Controller
 {
     public function index()
     {
-        $series = SermonSeries::withCount('sermons')->orderBy('name')->paginate(30);
+        $series = SermonSeries::withCount('sermons')->orderBy('name')->paginate(10);
         return view('admin.sermons.series.index', compact('series'));
     }
 

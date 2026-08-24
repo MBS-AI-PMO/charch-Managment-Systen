@@ -31,6 +31,7 @@ Route::permanentRedirect('/site.about', '/about');
 Route::permanentRedirect('/about-us', '/about');
 Route::permanentRedirect('/site.contact', '/contact');
 Route::permanentRedirect('/site.donate', '/donate');
+Route::permanentRedirect('/our-churches/qog-church-razzaq-town', '/our-churches/aog-church-razzaq-town');
 Route::permanentRedirect('/site.sermons.index', '/sermons');
 Route::permanentRedirect('/site.events.index', '/events');
 Route::permanentRedirect('/site.ministries.index', '/ministries');
@@ -49,6 +50,7 @@ Route::name('site.')->group(function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/about', [PageController::class, 'about'])->name('about');
     Route::get('/our-churches', [PageController::class, 'churches'])->name('churches');
+    Route::get('/our-churches/{church:slug}', [PageController::class, 'church'])->name('churches.show');
     Route::get('/donate', [PageController::class, 'donate'])->name('donate');
 
     Route::get('/contact', [ContactController::class, 'show'])->name('contact');

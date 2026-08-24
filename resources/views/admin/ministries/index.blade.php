@@ -10,7 +10,7 @@
     </div>
 
     <div class="card overflow-hidden">
-        <div class="px-5 py-3 border-b border-[rgb(var(--border))] text-xs text-ink-muted">{{ $ministries->count() }} ministries &middot; ordered by sort_order</div>
+        <div class="px-5 py-3 border-b border-[rgb(var(--border))] text-xs text-ink-muted">{{ $ministries->total() }} ministries &middot; ordered by sort_order</div>
         <div class="overflow-x-auto"><table class="w-full text-sm">
             <thead class="bg-surface text-ink-muted text-xs uppercase tracking-wider">
                 <tr>
@@ -46,14 +46,16 @@
                                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Draft</span>
                             @endif
                         </td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ route('admin.ministries.edit', $m) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                            @can('manage-ministries')
-                                <form method="POST" action="{{ route('admin.ministries.destroy', $m) }}" class="inline ml-3" onsubmit="return confirm('Delete this ministry?')">
-                                    @csrf @method('DELETE')
-                                    <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
-                            @endcan
+                        <td class="px-5 py-3 text-right">
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.ministries.edit', $m) }}" />
+                                @can('manage-ministries')
+                                    <form method="POST" action="{{ route('admin.ministries.destroy', $m) }}" onsubmit="return confirm('Delete this ministry?')">
+                                        @csrf @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -61,5 +63,8 @@
                 @endforelse
             </tbody>
         </table></div>
+        @if($ministries->hasPages())
+            <div class="px-5 py-3 border-t border-[rgb(var(--border))]">{{ $ministries->links() }}</div>
+        @endif
     </div>
 </x-admin.layout>

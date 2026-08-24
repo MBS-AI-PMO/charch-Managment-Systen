@@ -1,5 +1,5 @@
 <x-member.layout title="Prayer requests">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-6" x-data="{tab:'mine'}">
+    <div class="member-shell space-y-6" x-data="{tab:'mine'}">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <h1 class="font-serif text-3xl md:text-4xl">Prayer wall</h1>
@@ -11,7 +11,7 @@
         <div class="flex flex-wrap gap-2 border-b border-[rgb(var(--border))]">
             <button @click="tab='mine'"
                     :class="tab==='mine' ? 'text-brand-primary border-brand-primary' : 'text-ink-muted border-transparent hover:text-ink'"
-                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors">My requests ({{ $mine->count() }})</button>
+                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors">My requests ({{ $mine->total() }})</button>
             <button @click="tab='community'"
                     :class="tab==='community' ? 'text-brand-primary border-brand-primary' : 'text-ink-muted border-transparent hover:text-ink'"
                     class="px-4 py-2 text-sm font-medium border-b-2 transition-colors">Community board ({{ $community->total() }})</button>
@@ -52,11 +52,11 @@
                                     <td class="px-4 py-3 text-ink-muted">{{ $r->pray_count }}</td>
                                     <td class="px-4 py-3 text-ink-muted">{{ $r->created_at?->diffForHumans() }}</td>
                                     <td class="px-4 py-3 text-right">
-                                        <div class="inline-flex flex-wrap gap-3 justify-end">
-                                            <a href="{{ route('member.prayer.show', $r) }}" class="text-xs text-brand-primary hover:underline">View</a>
+                                        <div class="row-actions">
+                                            <x-row-action type="view" href="{{ route('member.prayer.show', $r) }}" />
                                             <form method="POST" action="{{ route('member.prayer.destroy', $r) }}" onsubmit="return confirm('Delete this prayer request?')">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="text-xs text-ink-muted hover:text-red-600">Delete</button>
+                                                <x-row-action type="delete" />
                                             </form>
                                         </div>
                                     </td>
@@ -67,6 +67,9 @@
                         </tbody>
                     </table>
                 </div>
+                @if($mine->hasPages())
+                    <div class="px-4 py-3 border-t border-[rgb(var(--border))]">{{ $mine->links() }}</div>
+                @endif
             </div>
         </div>
 

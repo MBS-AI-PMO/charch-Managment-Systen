@@ -27,7 +27,14 @@ class RateLimitServiceProvider extends ServiceProvider
 
         RateLimiter::for('contact-form', fn (Request $request) => Limit::perHour(5)->by($request->ip()));
 
-        RateLimiter::for('member-register', fn (Request $request) => Limit::perHour(3)->by($request->ip()));
+        // Local: room to re-test signups. Production: 3/hour per IP.
+        RateLimiter::for('member-register', function (Request $request) {
+            if (app()->environment('local')) {
+                return Limit::perMinute(30)->by($request->ip());
+            }
+
+            return Limit::perHour(3)->by($request->ip());
+        });
 
         // M4 Prayer Requests
         RateLimiter::for('prayer-submit', fn (Request $request) => Limit::perHour(10)->by($request->user()?->id ?? $request->ip()));

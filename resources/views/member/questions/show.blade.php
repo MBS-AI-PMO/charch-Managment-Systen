@@ -1,5 +1,5 @@
 <x-member.layout title="Question #{{ $question->id }}">
-    <div class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div class="text-xs text-ink-muted">
             <a href="{{ route('member.questions.index') }}" class="hover:text-brand-primary">&larr; Back to My questions</a>
         </div>

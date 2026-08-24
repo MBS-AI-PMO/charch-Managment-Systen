@@ -1,5 +1,5 @@
 <x-member.layout title="Certificate">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-6">
+    <div class="member-shell space-y-6">
         <div class="flex items-end justify-between flex-wrap gap-3">
             <div>
                 <div class="text-xs text-ink-muted mb-1">
@@ -37,44 +37,5 @@
                 </div>
             </div>
         </div>
-
-        <div class="card p-4 md:p-6">
-            <div class="text-xs uppercase tracking-wide text-ink-muted mb-4">Preview</div>
-            <div class="cert-admin-preview rounded-xl border border-[rgb(var(--border))] bg-[#ebe4d8] p-4 md:p-6 overflow-x-auto">
-                <div class="cert-admin-preview-stage mx-auto">
-                    <div class="cert-admin-preview-scale">
-                        @include($certificate->templateView(), ['certificate' => $certificate])
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <style>
-        .cert-admin-preview-stage {
-            width: 100%;
-            max-width: 980px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 420px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-        }
-        .cert-admin-preview-scale {
-            width: 1122px;
-            height: 793px;
-            transform: scale(0.48);
-            transform-origin: top center;
-            flex-shrink: 0;
-        }
-        @media (min-width: 640px) {
-            .cert-admin-preview-stage { height: 480px; }
-            .cert-admin-preview-scale { transform: scale(0.58); }
-        }
-        @media (min-width: 1024px) {
-            .cert-admin-preview-stage { height: 560px; max-width: 1100px; }
-            .cert-admin-preview-scale { transform: scale(0.68); }
-        }
-    </style>
 </x-member.layout>

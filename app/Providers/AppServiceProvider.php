@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -31,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
                 : null;
         });
 
+        $this->applyMailSettingsFromDatabase();
+        $this->applyGlobalReplyTo();
+
         // M10-T04: Force HTTPS and secure cookies in production.
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
@@ -52,5 +56,31 @@ class AppServiceProvider extends ServiceProvider
 
         // Phase 3 M5-T01: Event attendance management gate.
         Gate::define('manage-event-attendance', [\App\Policies\EventAttendancePolicy::class, 'manage']);
+    }
+
+    /**
+     * Do not override SMTP from from DB — .env is source of truth for delivery.
+     */
+    protected function applyMailSettingsFromDatabase(): void
+    {
+        // Intentionally empty: admin "mail.from_address" was forcing aamir@ while
+        // Gmail SMTP delivers, which made From look wrong / get rewritten.
+    }
+
+    /**
+     * Ensure every outgoing message has Reply-To = church mailbox when configured.
+     */
+    protected function applyGlobalReplyTo(): void
+    {
+        Event::listen(MessageSending::class, function (MessageSending $event) {
+            $reply = config('mail.reply_to.address');
+            if (! filled($reply)) {
+                return;
+            }
+            if (count($event->message->getReplyTo()) > 0) {
+                return;
+            }
+            $event->message->replyTo($reply, (string) config('mail.reply_to.name'));
+        });
     }
 }

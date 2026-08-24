@@ -43,9 +43,21 @@ $hasLogout    = Route::has('logout');
 $siteHomeUrl  = Route::has('site.home') ? route('site.home') : url('/');
 @endphp
 <header
-    x-data="{open:false}"
+    x-data="{
+        open: false,
+        syncNavLock() {
+            const lock = this.open && window.matchMedia('(max-width: 1279px)').matches;
+            document.documentElement.classList.toggle('overflow-hidden', lock);
+        }
+    }"
+    x-init="
+        $watch('open', () => syncNavLock());
+        window.addEventListener('resize', () => {
+            if (window.matchMedia('(min-width: 1280px)').matches) open = false;
+            syncNavLock();
+        });
+    "
     @keydown.escape.window="open=false"
-    @click.away="open=false"
     class="site-header sticky top-0 z-40"
 >
     <div class="site-header-accent" aria-hidden="true"></div>
@@ -84,7 +96,11 @@ $siteHomeUrl  = Route::has('site.home') ? route('site.home') : url('/');
                     aria-haspopup="menu"
                     class="site-header-text-link inline-flex items-center gap-2"
                 >
-                    <span class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-semibold">{{ $initials }}</span>
+                    @if($user?->avatarUrl())
+                        <img src="{{ $user->avatarUrl() }}" alt="" class="w-8 h-8 rounded-full object-cover shrink-0">
+                    @else
+                        <span class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-semibold">{{ $initials }}</span>
+                    @endif
                     <span class="max-w-[9rem] truncate">{{ $displayName }}</span>
                     <svg class="w-3 h-3 opacity-60" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.25 7.5 10 12.25 14.75 7.5z"/></svg>
                 </button>
@@ -124,48 +140,92 @@ $siteHomeUrl  = Route::has('site.home') ? route('site.home') : url('/');
         </button>
     </div>
 
-    <div
-        id="member-mobile-nav"
-        x-show="open"
-        x-cloak
-        x-transition:enter="transition ease-out duration-150"
-        x-transition:enter-start="opacity-0 -translate-y-1"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-100"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-1"
-        class="xl:hidden border-t border-[rgb(var(--border))] bg-surface/98 backdrop-blur"
-        role="menu"
-    >
-        <div class="w-full px-4 sm:px-6 py-4 max-h-[min(70vh,28rem)] overflow-y-auto overscroll-contain">
-            <nav class="site-mobile-nav-grid" aria-label="Member">
-                @foreach($links as $l)
-                    <a
-                        href="{{ $l['url'] }}"
-                        role="menuitem"
-                        @click="open=false"
-                        @class([
-                            'site-mobile-nav-chip',
-                            'border-[rgb(var(--brand-primary)/0.25)] bg-[rgb(var(--brand-primary)/0.06)] text-brand-primary' => $l['active'],
-                        ])
-                    >{{ $l['label'] }}</a>
-                @endforeach
-                <a href="{{ $profileUrl }}" role="menuitem" @click="open=false" class="site-mobile-nav-chip">My profile</a>
-                <a href="{{ $siteHomeUrl }}" role="menuitem" @click="open=false" class="site-mobile-nav-chip">Website</a>
-                @if($hasLogout)
-                    <form method="POST" action="{{ route('logout') }}">@csrf
-                        <button type="submit" class="site-mobile-nav-chip w-full text-left text-brand-primary">Sign out</button>
-                    </form>
-                @endif
-            </nav>
+    {{-- Mobile side drawer --}}
+    <template x-teleport="body">
+        <div class="xl:hidden">
+            <div
+                x-show="open"
+                x-cloak
+                x-transition:enter="transition-opacity ease-out duration-200"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity ease-in duration-150"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="site-mobile-nav-backdrop"
+                @click="open=false"
+                aria-hidden="true"
+            ></div>
 
-            @if($donateUrl && $donateUrl !== '#')
-                <div class="mt-4 flex flex-col gap-2 border-t border-[rgb(var(--border))] pt-4">
-                    <a href="{{ $donateUrl }}" @click="open=false" class="btn-primary shine-btn glow-primary w-full text-sm justify-center">
-                        <span>{{ $donateLabel }}</span>
+            <div
+                id="member-mobile-nav"
+                x-show="open"
+                x-cloak
+                role="dialog"
+                aria-modal="true"
+                aria-label="Member menu"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full"
+                class="site-mobile-nav-drawer"
+            >
+                <div class="site-mobile-nav-drawer-head">
+                    <a href="{{ $dashboardUrl }}" @click="open=false" class="site-mobile-nav-drawer-brand" aria-label="{{ $brand }} — Dashboard">
+                        @if($brandLogoUrl ?? null)
+                            <img src="{{ $brandLogoUrl }}" alt="" class="h-9 w-auto max-w-[64px] object-contain shrink-0">
+                        @endif
+                        <span class="leading-tight min-w-0">
+                            <span class="block font-serif text-sm font-semibold tracking-tight text-ink truncate">{{ $brand }}</span>
+                            @if($tagline)
+                                <span class="block text-[0.65rem] tracking-[0.12em] uppercase text-ink-muted mt-0.5 truncate">{{ $tagline }}</span>
+                            @endif
+                        </span>
                     </a>
+                    <button
+                        type="button"
+                        @click="open=false"
+                        class="site-mobile-nav-drawer-close"
+                        aria-label="Close menu"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
-            @endif
+
+                <div class="site-mobile-nav-drawer-body">
+                    <nav class="site-mobile-nav-grid" aria-label="Member">
+                        @foreach($links as $l)
+                            <a
+                                href="{{ $l['url'] }}"
+                                @click="open=false"
+                                @class([
+                                    'site-mobile-nav-chip',
+                                    'border-[rgb(var(--brand-primary)/0.25)] bg-[rgb(var(--brand-primary)/0.06)] text-brand-primary' => $l['active'],
+                                ])
+                            >{{ $l['label'] }}</a>
+                        @endforeach
+                        <a href="{{ $profileUrl }}" @click="open=false" class="site-mobile-nav-chip">My profile</a>
+                        <a href="{{ $siteHomeUrl }}" @click="open=false" class="site-mobile-nav-chip">Website</a>
+                        @if($hasLogout)
+                            <form method="POST" action="{{ route('logout') }}">@csrf
+                                <button type="submit" class="site-mobile-nav-chip w-full text-left text-brand-primary">Sign out</button>
+                            </form>
+                        @endif
+                    </nav>
+                </div>
+
+                @if($donateUrl && $donateUrl !== '#')
+                    <div class="site-mobile-nav-drawer-foot">
+                        <a href="{{ $donateUrl }}" @click="open=false" class="btn-primary shine-btn glow-primary w-full text-sm justify-center">
+                            <span>{{ $donateLabel }}</span>
+                        </a>
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
+    </template>
 </header>

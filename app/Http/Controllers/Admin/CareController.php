@@ -21,7 +21,7 @@ class CareController extends Controller
         }
 
         return view('admin.care.index', [
-            'items' => $q->paginate(20)->withQueryString(),
+            'items' => $q->paginate(10)->withQueryString(),
         ]);
     }
 

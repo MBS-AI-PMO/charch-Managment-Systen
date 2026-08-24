@@ -123,7 +123,7 @@
                 <a href="{{ $pdfUrl }}">Export PDF</a>
             @endif
             @if(!empty($backUrl))
-                <a href="{{ $backUrl }}">Back to details</a>
+                <a href="{{ $backUrl }}">Back</a>
             @endif
             @if(!empty($editUrl))
                 <a href="{{ $editUrl }}">Edit</a>

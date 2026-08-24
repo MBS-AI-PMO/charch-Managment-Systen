@@ -53,14 +53,16 @@
                                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Draft</span>
                             @endif
                         </td>
-                        <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <a href="{{ route('admin.sermons.edit', $sermon) }}" class="text-xs text-brand-primary hover:underline">Edit</a>
-                            @can('manage-sermons')
-                                <form method="POST" action="{{ route('admin.sermons.destroy', $sermon) }}" class="inline ml-3" onsubmit="return confirm('Delete this sermon?')">
-                                    @csrf @method('DELETE')
-                                    <button class="text-xs text-red-600 hover:underline">Delete</button>
-                                </form>
-                            @endcan
+                        <td class="px-5 py-3 text-right">
+                            <div class="row-actions">
+                                <x-row-action type="edit" href="{{ route('admin.sermons.edit', $sermon) }}" />
+                                @can('manage-sermons')
+                                    <form method="POST" action="{{ route('admin.sermons.destroy', $sermon) }}" onsubmit="return confirm('Delete this sermon?')">
+                                        @csrf @method('DELETE')
+                                        <x-row-action type="delete" />
+                                    </form>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty

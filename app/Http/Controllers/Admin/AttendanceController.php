@@ -19,7 +19,7 @@ class AttendanceController extends Controller
                   ->orWhereDate('starts_at', '>=', now()->subDays(30));
             })
             ->orderByDesc('starts_at')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('admin.attendance.index', compact('events'));
     }

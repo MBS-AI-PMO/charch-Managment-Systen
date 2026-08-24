@@ -31,7 +31,17 @@ class ProfileRequest extends FormRequest
             'email' => "required|email:rfc|max:160|unique:users,email,$id",
             'phone' => 'nullable|string|max:32',
             'bio' => 'nullable|string|max:280',
-            'avatar_path' => 'nullable|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,jpg,png,webp,gif|max:5120',
+            'remove_avatar' => 'nullable|boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'avatar.image' => 'Please choose a photo (JPG, PNG or WebP).',
+            'avatar.mimes' => 'Please choose a photo (JPG, PNG or WebP).',
+            'avatar.max' => 'That photo is too large. Please use a file under 5 MB.',
         ];
     }
 }

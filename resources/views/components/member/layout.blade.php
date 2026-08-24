@@ -32,7 +32,7 @@
 </head>
 <body class="bg-surface font-sans text-ink antialiased min-h-screen flex flex-col">
     <x-member.header />
-    <main class="flex-1">
+            <main class="flex-1 min-w-0 max-w-full">
         {{ $slot }}
     </main>
     <x-member.footer />

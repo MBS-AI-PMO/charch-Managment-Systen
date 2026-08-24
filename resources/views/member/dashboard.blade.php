@@ -5,7 +5,7 @@
     $firstName = $user ? trim(explode(' ', $user->name)[0]) : '';
 @endphp
 <x-member.layout title="Dashboard">
-    <div class="max-w-container mx-auto px-4 py-10 space-y-8">
+    <div class="member-shell space-y-8">
         <div class="card p-6 md:p-8 bg-gradient-to-br from-brand-primary/10 to-brand-secondary/20">
             <h1 class="font-serif text-3xl md:text-4xl">{{ $greeting }}{{ $firstName ? ', '.$firstName : '' }}</h1>
             <p class="text-ink-muted mt-2">Welcome back. Here's what's happening this week.</p>

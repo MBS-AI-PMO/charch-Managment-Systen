@@ -13,11 +13,11 @@
     --border: 232 226 216;
   }
   html {
-    overflow-x: clip;
+    overflow-x: hidden;
   }
   body {
     @apply bg-surface text-ink font-sans antialiased;
-    overflow-x: clip;
+    overflow-x: hidden;
     max-width: 100%;
   }
   h1, h2, h3, h4 { @apply font-serif; }
@@ -880,7 +880,76 @@
   box-shadow: 0 10px 20px -12px rgb(var(--brand-primary) / 0.8);
 }
 
-/* Compact mobile nav dropdown (under header, not full-screen) */
+/* Mobile side drawer (slides in from the right) */
+.site-mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgb(20 16 14 / 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.site-mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(20.5rem, 88vw);
+  background: rgb(var(--surface-elevated));
+  border-left: 1px solid rgb(var(--border));
+  box-shadow: -18px 0 40px -24px rgb(44 40 37 / 0.45);
+}
+.site-mobile-nav-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding: 1rem 1rem 0.85rem;
+  border-bottom: 1px solid rgb(var(--border));
+}
+.site-mobile-nav-drawer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+.site-mobile-nav-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  color: rgb(var(--ink));
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.site-mobile-nav-drawer-close:hover {
+  background: rgb(var(--brand-primary) / 0.08);
+  color: rgb(var(--brand-primary));
+}
+.site-mobile-nav-drawer-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+.site-mobile-nav-drawer-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.85rem 1rem 1.15rem;
+  border-top: 1px solid rgb(var(--border));
+  background: rgb(var(--surface) / 0.65);
+}
+
+/* Compact mobile nav chips inside the drawer */
 .site-mobile-nav-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1438,20 +1507,24 @@ button.site-mobile-nav-chip:hover {
 }
 .churches-grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  justify-content: center;
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (min-width: 768px) {
   .churches-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.15rem;
   }
 }
-@media (min-width: 1100px) {
-  .churches-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+a.church-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 .church-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -1528,13 +1601,81 @@ button.site-mobile-nav-chip:hover {
 .church-card-meta a:hover {
   text-decoration: underline;
 }
+.church-card-cta {
+  margin-top: auto;
+  padding-top: 1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: rgb(var(--brand-primary));
+}
+.church-card-accent {
+  color: rgb(var(--brand-primary));
+}
+.church-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.25rem 0 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgb(var(--brand-primary));
+  text-decoration: none;
+}
+.church-back:hover {
+  text-decoration: underline;
+}
+.church-detail-grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .church-detail-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+    gap: 1.75rem;
+  }
+}
+.church-detail-card {
+  position: sticky;
+  top: 5.5rem;
+}
+.church-detail-heading {
+  margin: 1.6rem 0 0;
+  font-family: Fraunces, ui-serif, Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgb(var(--ink));
+}
+.church-detail-list {
+  margin: 0.7rem 0 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.4rem;
+  color: rgb(var(--ink-muted));
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.church-detail-blocks {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+@media (min-width: 700px) {
+  .church-detail-blocks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .church-detail-blocks > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
 @media (max-width: 1023px) {
   .admin-main {
     max-width: 100%;
-    overflow-x: clip;
+    overflow-x: hidden;
   }
   .admin-main main {
     min-width: 0;
+    max-width: 100%;
   }
 }
 
@@ -1831,6 +1972,8 @@ button.site-mobile-nav-chip:hover {
   list-style: none;
   margin: 0;
   padding: 0;
+  column-count: 2;
+  column-gap: 1.5rem;
 }
 .site-footer-links li {
   break-inside: avoid;
@@ -2073,4 +2216,156 @@ html[data-admin-sidebar="collapsed"] .admin-sidebar-foot {
   color: rgb(var(--brand-primary));
   border-color: rgb(var(--brand-primary) / 0.28);
   background: rgb(var(--brand-primary) / 0.1);
+}
+
+/* Slightly airier list rows */
+.card table tbody tr > td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Mobile: tables swipe sideways instead of crushing columns */
+@media (max-width: 1023px) {
+  .admin-app .card,
+  .admin-app main > *,
+  body > .min-h-screen {
+    max-width: 100%;
+  }
+  .card.overflow-hidden:has(table) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .card .overflow-x-auto,
+  .card.overflow-x-auto,
+  .overflow-x-auto {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .card table,
+  .admin-app table.w-full {
+    width: max(100%, 46rem);
+    min-width: 46rem;
+  }
+  .card table th,
+  .card table td {
+    vertical-align: middle;
+  }
+  .card table th:last-child,
+  .card table td:last-child {
+    white-space: nowrap;
+  }
+  .card table .row-actions,
+  .admin-app .row-actions {
+    flex-wrap: nowrap;
+  }
+  nav[role="navigation"] {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Don't let long words / embeds blow out phone width */
+iframe,
+embed,
+object {
+  max-width: 100%;
+}
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Member portal — match header width, fill the screen */
+.member-shell {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: 2.5rem 1rem;
+}
+@media (min-width: 640px) {
+  .member-shell { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 1024px) {
+  .member-shell { padding-left: 2rem; padding-right: 2rem; }
+}
+@media (min-width: 1280px) {
+  .member-shell { padding-left: 2.5rem; padding-right: 2.5rem; }
+}
+
+/* Table row actions — small icon + label, color only */
+.row-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+.row-actions form {
+  display: inline-flex;
+  margin: 0;
+}
+a.btn-action,
+button.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.btn-action-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+}
+.btn-action-ico svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  display: block;
+}
+.btn-action-txt {
+  padding: 0;
+}
+a.btn-action:hover,
+button.btn-action:hover {
+  text-decoration: underline;
+  transform: none;
+  box-shadow: none;
+}
+
+a.btn-action-view,
+button.btn-action-view {
+  color: rgb(var(--ink-muted));
+}
+a.btn-action-view:hover,
+button.btn-action-view:hover {
+  color: rgb(var(--ink));
+}
+
+a.btn-action-edit,
+button.btn-action-edit {
+  color: rgb(var(--brand-primary));
+}
+
+a.btn-action-delete,
+button.btn-action-delete {
+  color: #dc2626;
 }

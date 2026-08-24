@@ -24,7 +24,7 @@
                     @can('manage-menus')
                         <form method="POST" action="{{ route('admin.menus.destroy', $menu) }}" onsubmit="return confirm('Delete this menu?')">
                             @csrf @method('DELETE')
-                            <button class="btn-ghost text-sm text-red-600">Delete</button>
+                            <x-row-action type="delete" />
                         </form>
                     @endcan
                 </div>
